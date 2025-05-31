@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de Crédito - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 fw-bold mb-2">
+                    <i class="fas fa-history me-2 text-primary"></i>
+                    Histórico de Crédito
+                </h1>
+                <p class="text-muted mb-0">
+                    Gerencie seu histórico de crédito para melhorar suas análises futuras
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'historico_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Adicionar Histórico
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-0 bg-primary bg-gradient text-white">
+            <div class="card-body text-center p-3">
+                <i class="fas fa-file-alt display-6 mb-2"></i>
+                <h4 class="fw-bold">{{ historicos|length }}</h4>
+                <small>Total de Registros</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-0 bg-success bg-gradient text-white">
+            <div class="card-body text-center p-3">
+                <i class="fas fa-check-circle display-6 mb-2"></i>
+                <h4 class="fw-bold">
+                    {% for h in historicos %}
+                        {% if h.status == 'PAGO' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </h4>
+                <small>Pagos em Dia</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-0 bg-warning bg-gradient text-white">
+            <div class="card-body text-center p-3">
+                <i class="fas fa-exclamation-triangle display-6 mb-2"></i>
+                <h4 class="fw-bold">
+                    {% for h in historicos %}
+                        {% if h.status == 'ATRASO' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </h4>
+                <small>Em Atraso</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-0 bg-info bg-gradient text-white">
+            <div class="card-body text-center p-3">
+                <i class="fas fa-money-bill-wave display-6 mb-2"></i>
+                <h4 class="fw-bold">
+                    {% for h in historicos %}
+                        {{ h.valor_contratado|add:0|floatformat:0 }}
+                    {% empty %}0{% endfor %}
+                </h4>
+                <small>AOA Total</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Historical Records Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-table me-2 text-primary"></i>
+                    Registros de Histórico
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                {% if historicos %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0 py-3">Instituição</th>
+                                    <th class="border-0 py-3">Tipo</th>
+                                    <th class="border-0 py-3">Valor</th>
+                                    <th class="border-0 py-3">Data Contratação</th>
+                                    <th class="border-0 py-3">Status</th>
+                                    <th class="border-0 py-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for historico in historicos %}
+                                <tr>
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                                 style="width: 40px; height: 40px;">
+                                                <i class="fas fa-university"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ historico.instituicao_financeira }}</h6>
+                                                <small class="text-muted">{{ historico.tipo_credito }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="badge bg-secondary">
+                                            {{ historico.get_tipo_credito_display }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="fw-bold">{{ historico.valor_contratado|floatformat:2 }} AOA</span>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="text-muted">
+                                            {{ historico.data_contratacao|date:"d/m/Y" }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3">
+                                        {% if historico.status == 'PAGO' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Pago
+                                            </span>
+                                        {% elif historico.status == 'ATIVO' %}
+                                            <span class="badge bg-primary">
+                                                <i class="fas fa-clock me-1"></i>Ativo
+                                            </span>
+                                        {% elif historico.status == 'ATRASO' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Atraso
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>Inadimplente
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'historico_update' historico.pk %}" 
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'historico_delete' historico.pk %}" 
+                                               class="btn btn-outline-danger btn-sm"
+                                               onclick="return confirm('Tem certeza que deseja excluir este histórico?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <div class="card-footer bg-white border-0">
+                        <nav aria-label="Navegação de páginas">
+                            <ul class="pagination justify-content-center mb-0">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+                                
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-history display-1 text-muted opacity-50"></i>
+                        </div>
+                        <h4 class="fw-bold text-muted mb-3">Nenhum histórico encontrado</h4>
+                        <p class="text-muted mb-4">
+                            Adicione seu histórico de crédito para melhorar a análise das suas solicitações futuras.
+                        </p>
+                        <a href="{% url 'historico_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Adicionar Primeiro Histórico
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 bg-light">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold mb-2">
+                            <i class="fas fa-lightbulb me-2 text-warning"></i>
+                            Dica Importante
+                        </h5>
+                        <p class="text-muted mb-0">
+                            Manter seu histórico de crédito atualizado ajuda nosso sistema a fazer análises mais precisas 
+                            e pode aumentar suas chances de aprovação em futuras solicitações.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-question-circle me-2"></i>Saiba Mais
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate counters
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.card-body h4');
+        counters.forEach(counter => {
+            const target = parseInt(counter.innerText);
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                counter.innerText = Math.floor(current);
+                if (current >= target) {
+                    counter.innerText = target;
+                    clearInterval(timer);
+                }
+            }, 10);
+        });
+    });
+</script>
+{% endblock %}
