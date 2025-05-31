@@ -1,5 +1,4 @@
 from decimal import Decimal
-import datetime
 from .models import Cliente, SolicitacaoCredito, AnaliseCredito, HistoricoCredito
 from django.utils import timezone
 
