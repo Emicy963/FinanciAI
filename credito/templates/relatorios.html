@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}Relatórios - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h2 fw-bold mb-2">
+            <i class="fas fa-chart-bar me-2 text-primary"></i>
+            Relatórios e Análises
+        </h1>
+        <p class="text-muted">Acompanhe suas estatísticas e histórico de crédito</p>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-5">
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 bg-primary text-white">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-money-bill-wave display-6 mb-3 opacity-75"></i>
+                <h3 class="fw-bold">{{ total_solicitado|floatformat:0 }} AOA</h3>
+                <p class="mb-0 opacity-75">Total Solicitado</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 bg-success text-white">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-check-circle display-6 mb-3 opacity-75"></i>
+                <h3 class="fw-bold">{{ total_aprovado|floatformat:0 }} AOA</h3>
+                <p class="mb-0 opacity-75">Total Aprovado</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 bg-info text-white">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-percentage display-6 mb-3 opacity-75"></i>
+                <h3 class="fw-bold">
+                    {% if total_solicitado > 0 %}
+                        {{ total_aprovado|div:total_solicitado|mul:100|floatformat:1 }}%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </h3>
+                <p class="mb-0 opacity-75">Taxa de Aprovação</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Status Distribution Chart -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-pie-chart me-2 text-primary"></i>
+                    Distribuição por Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Monthly Trend Chart -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-line-chart me-2 text-primary"></i>
+                    Tendência Mensal
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Score History -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-chart-line me-2 text-primary"></i>
+                    Histórico de Score de Crédito
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 400px;">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h6 class="text-muted mb-1">Score Atual</h6>
+                            <h4 class="fw-bold text-primary mb-0">
+                                {% if score_history %}
+                                    {{ score_history|last|get_item:"score" }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h6 class="text-muted mb-1">Classificação</h6>
+                            <h4 class="fw-bold mb-0">
+                                {% if score_history %}
+                                    {% with score=score_history|last|get_item:"score" %}
+                                        {% if score >= 700 %}
+                                            <span class="text-success">Excelente</span>
+                                        {% elif score >= 600 %}
+                                            <span class="text-info">Bom</span>
+                                        {% elif score >= 500 %}
+                                            <span class="text-warning">Regular</span>
+                                        {% else %}
+                                            <span class="text-danger">Baixo</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded">
+                            <h6 class="text-muted mb-2">Dicas para Melhorar</h6>
+                            <ul class="list-unstyled mb-0 small">
+                                <li><i class="fas fa-check text-success me-2"></i>Mantenha um histórico de pagamentos em dia</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Diversifique suas fontes de renda</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Mantenha baixo nível de endividamento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 bg-light">
+            <div class="card-body text-center py-4">
+                <h6 class="fw-bold mb-3">Exportar Relatórios</h6>
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-outline-primary" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+                    </button>
+                    <button class="btn btn-outline-success" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel me-2"></i>Exportar Excel
+                    </button>
+                    <button class="btn btn-outline-info" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Data from Django
+const statusData = {{ status_data|safe }};
+const monthlyData = {{ monthly_data|safe }};
+const scoreHistory = {{ score_history|safe }};
+
+// Status Chart (Doughnut)
+const statusCtx = document.getElementById('statusChart').getContext('2d');
+new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+        labels: statusData.map(item => {
+            const statusMap = {
+                'PENDENTE': 'Pendente',
+                'APROVADO': 'Aprovado',
+                'REJEITADO': 'Rejeitado',
+                'CANCELADO': 'Cancelado'
+            };
+            return statusMap[item.status] || item.status;
+        }),
+        datasets: [{
+            data: statusData.map(item => item.count),
+            backgroundColor: [
+                '#fbbf24', // warning - pendente
+                '#10b981', // success - aprovado
+                '#ef4444', // danger - rejeitado
+                '#6b7280'  // gray - cancelado
+            ],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true
+                }
+            }
+        }
+    }
+});
+
+// Monthly Chart (Line)
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+new Chart(monthlyCtx, {
+    type: 'line',
+    data: {
+        labels: monthlyData.map(item => {
+            const date = new Date(item.month);
+            return date.toLocaleDateString('pt-AO', { month: 'short', year: 'numeric' });
+        }),
+        datasets: [{
+            label: 'Solicitações',
+            data: monthlyData.map(item => item.count),
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+
+// Score History Chart (Line)
+const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+new Chart(scoreCtx, {
+    type: 'line',
+    data: {
+        labels: scoreHistory.map(item => {
+            const date = new Date(item.data);
+            return date.toLocaleDateString('pt-AO');
+        }),
+        datasets: [{
+            label: 'Score de Crédito',
+            data: scoreHistory.map(item => item.score),
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#8b5cf6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 850,
+                ticks: {
+                    stepSize: 100
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+
+// Export functions
+function exportToPDF() {
+    // Implement PDF export functionality
+    alert('Funcionalidade de exportação para PDF será implementada em breve.');
+}
+
+function exportToExcel() {
+    // Implement Excel export functionality
+    alert('Funcionalidade de exportação para Excel será implementada em breve.');
+}
+</script>
+{% endblock %}
