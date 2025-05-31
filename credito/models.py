@@ -184,3 +184,83 @@ class SolicitacaoCredito(models.Model):
         ordering = ['-data_solicitacao']
         verbose_name = "Solicitação de Crédito"
         verbose_name_plural = "Solicitações de Crédito"
+
+class AnaliseCredito(models.Model):
+    """Modelo para armazenar detalhes da análise automática"""
+    
+    solicitacao = models.OneToOneField(
+        SolicitacaoCredito, 
+        on_delete=models.CASCADE,
+        related_name="analise_detalhada"
+    )
+    
+    # Scores individuais dos critérios
+    score_idade = models.IntegerField(default=0)
+    score_renda = models.IntegerField(default=0)
+    score_tempo_servico = models.IntegerField(default=0)
+    score_historico = models.IntegerField(default=0)
+    score_divida_renda = models.IntegerField(default=0)
+    score_localizacao = models.IntegerField(default=0)
+    
+    # Score final e decisão
+    score_total = models.IntegerField(default=0)
+    risco_calculado = models.CharField(max_length=10, choices=[
+        ('BAIXO', 'Baixo'),
+        ('MEDIO', 'Médio'),
+        ('ALTO', 'Alto'),
+        ('CRITICO', 'Crítico'),
+    ])
+    
+    # Detalhes da análise
+    relacao_divida_renda = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    capacidade_pagamento = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
+    # Log da análise
+    detalhes_analise = models.JSONField(default=dict, blank=True)
+    data_analise = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Análise - Solicitação #{self.solicitacao.id} - Score: {self.score_total}"
+
+
+class HistoricoCredito(models.Model):
+    """Histórico de créditos anteriores do cliente"""
+    
+    TIPO_CREDITO_CHOICES = [
+        ('PESSOAL', 'Crédito Pessoal'),
+        ('HABITACAO', 'Crédito Habitação'),
+        ('AUTOMOVEL', 'Crédito Automóvel'),
+        ('CARTAO', 'Cartão de Crédito'),
+        ('OUTROS', 'Outros'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('ATIVO', 'Ativo'),
+        ('QUITADO', 'Quitado em Dia'),
+        ('QUITADO_ATRASO', 'Quitado com Atraso'),
+        ('INADIMPLENTE', 'Inadimplente'),
+        ('RENEGOCIADO', 'Renegociado'),
+    ]
+    
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="historico_credito")
+    
+    tipo_credito = models.CharField(max_length=15, choices=TIPO_CREDITO_CHOICES)
+    instituicao = models.CharField(max_length=100)
+    valor_original = models.DecimalField(max_digits=12, decimal_places=2)
+    valor_em_aberto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
+    data_contratacao = models.DateField()
+    prazo_original_meses = models.IntegerField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    
+    dias_atraso_maximo = models.IntegerField(default=0)
+    parcelas_pagas = models.IntegerField(default=0)
+    parcelas_total = models.IntegerField()
+    
+    data_registro = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.cliente.nome_completo} - {self.get_tipo_credito_display()} - {self.get_status_display()}"
+    
+    class Meta:
+        ordering = ['-data_contratacao']
