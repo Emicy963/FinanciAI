@@ -95,3 +95,92 @@ class Cliente(models.Model):
     @property
     def nome_completo(self):
         return f"{self.usuario.first_name} {self.usuario.last_name}"
+
+class SolicitacaoCredito(models.Model):
+    STATUS_CHOICES = [
+        ('PENDENTE', 'Análise Pendente'),
+        ('ANALISE', 'Em Análise'),
+        ('APROVADO', 'Aprovado'),
+        ('REJEITADO', 'Rejeitado'),
+        ('CANCELADO', 'Cancelado'),
+    ]
+    
+    FINALIDADE_CHOICES = [
+        ('PESSOAL', 'Crédito Pessoal'),
+        ('HABITACAO', 'Crédito Habitação'),
+        ('AUTOMOVEL', 'Crédito Automóvel'),
+        ('EDUCACAO', 'Crédito Educação'),
+        ('CONSOLIDACAO', 'Consolidação de Dívidas'),
+        ('NEGOCIO', 'Capital de Giro'),
+        ('OUTROS', 'Outros'),
+    ]
+    
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="solicitacoes_credito")
+    
+    # Dados da solicitação
+    valor_solicitado = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('10000.00'))]  # Mínimo 10,000 AOA
+    )
+    finalidade = models.CharField(max_length=15, choices=FINALIDADE_CHOICES)
+    prazo_meses = models.IntegerField(
+        validators=[MinValueValidator(3), MaxValueValidator(240)]  # 3 meses a 20 anos
+    )
+    
+    # Resultado da análise
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDENTE')
+    valor_aprovado = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True
+    )
+    taxa_juros_anual = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text="Taxa de juros anual em %"
+    )
+    
+    # Observações da análise
+    motivo_rejeicao = models.TextField(blank=True, null=True)
+    observacoes_analise = models.TextField(blank=True, null=True)
+    
+    # Timestamps
+    data_solicitacao = models.DateTimeField(auto_now_add=True)
+    data_analise = models.DateTimeField(null=True, blank=True)
+    data_aprovacao = models.DateTimeField(null=True, blank=True)
+    
+    # Dados do analista (para auditoria)
+    analisado_por = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name="analises_realizadas"
+    )
+    
+    def __str__(self):
+        return f"Solicitação #{self.id} - {self.cliente.nome_completo} - {self.get_status_display()}"
+    
+    @property
+    def valor_parcela_estimada(self):
+        if self.valor_aprovado and self.taxa_juros_anual and self.prazo_meses:
+            # Cálculo simplificado da parcela (SAC)
+            valor = float(self.valor_aprovado)
+            taxa_mensal = float(self.taxa_juros_anual) / 12 / 100
+            parcelas = self.prazo_meses
+            
+            if taxa_mensal > 0:
+                parcela = valor * (taxa_mensal * (1 + taxa_mensal)**parcelas) / ((1 + taxa_mensal)**parcelas - 1)
+                return Decimal(str(round(parcela, 2)))
+            else:
+                return self.valor_aprovado / self.prazo_meses
+        return None
+    
+    class Meta:
+        ordering = ['-data_solicitacao']
+        verbose_name = "Solicitação de Crédito"
+        verbose_name_plural = "Solicitações de Crédito"
