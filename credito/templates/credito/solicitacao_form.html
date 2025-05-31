@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova Solicitação de Crédito - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="h2 fw-bold mb-3">
+                <i class="fas fa-file-invoice me-2 text-primary"></i>
+                Solicitação de Crédito
+            </h1>
+            <p class="text-muted">
+                Preencha os dados abaixo para solicitar seu crédito. 
+                Nossa análise é automática e você receberá o resultado em poucos minutos.
+            </p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>
+                    Dados da Solicitação
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="creditForm">
+                    {% csrf_token %}
+                    
+                    <!-- Valor Solicitado -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.valor_solicitado.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-money-bill-wave me-1 text-success"></i>
+                                Valor Solicitado (AOA)
+                            </label>
+                            {{ form.valor_solicitado }}
+                            {% if form.valor_solicitado.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.valor_solicitado.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Valor mínimo: 50.000 AOA | Valor máximo: 5.000.000 AOA
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.prazo_meses.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-calendar-alt me-1 text-info"></i>
+                                Prazo (Meses)
+                            </label>
+                            {{ form.prazo_meses }}
+                            {% if form.prazo_meses.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.prazo_meses.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Entre 6 e 60 meses
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Finalidade e Renda -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.finalidade.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-target me-1 text-warning"></i>
+                                Finalidade do Crédito
+                            </label>
+                            {{ form.finalidade }}
+                            {% if form.finalidade.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.finalidade.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.renda_mensal.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-wallet me-1 text-primary"></i>
+                                Renda Mensal (AOA)
+                            </label>
+                            {{ form.renda_mensal }}
+                            {% if form.renda_mensal.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.renda_mensal.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Informações Profissionais -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.profissao.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-briefcase me-1 text-secondary"></i>
+                                Profissão
+                            </label>
+                            {{ form.profissao }}
+                            {% if form.profissao.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.profissao.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.tempo_emprego.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-clock me-1 text-info"></i>
+                                Tempo de Emprego (Meses)
+                            </label>
+                            {{ form.tempo_emprego }}
+                            {% if form.tempo_emprego.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.tempo_emprego.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Informações Complementares -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.tem_conta_bancaria.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-university me-1 text-primary"></i>
+                                Possui Conta Bancária?
+                            </label>
+                            <div class="form-check form-switch">
+                                {{ form.tem_conta_bancaria }}
+                                <label class="form-check-label" for="{{ form.tem_conta_bancaria.id_for_label }}">
+                                    Sim, possuo conta bancária
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.tem_historico_credito.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-history me-1 text-warning"></i>
+                                Possui Histórico de Crédito?
+                            </label>
+                            <div class="form-check form-switch">
+                                {{ form.tem_historico_credito }}
+                                <label class="form-check-label" for="{{ form.tem_historico_credito.id_for_label }}">
+                                    Sim, já tive créditos anteriormente
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="mb-4">
+                        <label for="{{ form.observacoes.id_for_label }}" class="form-label fw-bold">
+                            <i class="fas fa-comment me-1 text-secondary"></i>
+                            Observações (Opcional)
+                        </label>
+                        {{ form.observacoes }}
+                        {% if form.observacoes.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.observacoes.errors.0 }}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Informações adicionais que possam ajudar na análise do seu crédito
+                        </small>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'credito_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Voltar
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Enviar Solicitação
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="card border-0 bg-light mt-4">
+            <div class="card-body text-center p-4">
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-info-circle me-2 text-info"></i>
+                    Como funciona nossa análise?
+                </h6>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-robot me-1"></i>
+                            Análise automática por IA
+                        </small>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            100% seguro e confidencial
+                        </small>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>
+                            Resultado em poucos minutos
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('creditForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Format currency inputs
+    const valorInput = document.getElementById('{{ form.valor_solicitado.id_for_label }}');
+    const rendaInput = document.getElementById('{{ form.renda_mensal.id_for_label }}');
+    
+    function formatCurrency(input) {
+        if (input) {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value) {
+                    value = parseInt(value).toLocaleString('pt-AO');
+                }
+                e.target.value = value;
+            });
+        }
+    }
+    
+    formatCurrency(valorInput);
+    formatCurrency(rendaInput);
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}
