@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}Editar Histórico{% else %}Adicionar Histórico{% endif %} - CreditoSmart Angola
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center">
+            <a href="{% url 'historico_list' %}" class="btn btn-outline-secondary me-3">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h1 class="h2 fw-bold mb-2">
+                    <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} me-2 text-primary"></i>
+                    {% if object %}Editar Histórico{% else %}Adicionar Histórico{% endif %}
+                </h1>
+                <p class="text-muted mb-0">
+                    {% if object %}
+                        Atualize as informações do seu histórico de crédito
+                    {% else %}
+                        Adicione um novo registro ao seu histórico de crédito
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Form Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary bg-gradient text-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-university me-2"></i>
+                    Informações do Crédito
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Instituição Financeira -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.instituicao_financeira.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-university me-1 text-primary"></i>
+                                Instituição Financeira *
+                            </label>
+                            {{ form.instituicao_financeira }}
+                            {% if form.instituicao_financeira.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.instituicao_financeira.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Nome do banco ou instituição financeira
+                            </small>
+                        </div>
+                        
+                        <!-- Tipo de Crédito -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.tipo_credito.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-tags me-1 text-primary"></i>
+                                Tipo de Crédito *
+                            </label>
+                            {{ form.tipo_credito }}
+                            {% if form.tipo_credito.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.tipo_credito.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Valor Contratado -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.valor_contratado.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-money-bill-wave me-1 text-primary"></i>
+                                Valor Contratado (AOA) *
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">AOA</span>
+                                {{ form.valor_contratado }}
+                            </div>
+                            {% if form.valor_contratado.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.valor_contratado.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Data de Contratação -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.data_contratacao.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-calendar me-1 text-primary"></i>
+                                Data de Contratação *
+                            </label>
+                            {{ form.data_contratacao }}
+                            {% if form.data_contratacao.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.data_contratacao.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-info-circle me-1 text-primary"></i>
+                                Status Atual *
+                            </label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.status.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Prazo (meses) -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.prazo_meses.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-clock me-1 text-primary"></i>
+                                Prazo (meses)
+                            </label>
+                            {{ form.prazo_meses }}
+                            {% if form.prazo_meses.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.prazo_meses.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Duração total do contrato em meses
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Observações -->
+                    <div class="mb-4">
+                        <label for="{{ form.observacoes.id_for_label }}" class="form-label fw-bold">
+                            <i class="fas fa-sticky-note me-1 text-primary"></i>
+                            Observações
+                        </label>
+                        {{ form.observacoes }}
+                        {% if form.observacoes.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.observacoes.errors %}
+                                    <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Informações adicionais relevantes sobre este crédito
+                        </small>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'historico_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            {% if object %}Atualizar{% else %}Salvar{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Help Card -->
+        <div class="card border-0 bg-light mt-4">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-question-circle me-2 text-info"></i>
+                    Por que adicionar histórico de crédito?
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Melhora a precisão da análise
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Aumenta chances de aprovação
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Histórico positivo = melhores condições
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Transparência nos processos
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add Bootstrap classes to form fields
+        const formControls = document.querySelectorAll('input, select, textarea');
+        formControls.forEach(field => {
+            if (!field.classList.contains('btn')) {
+                field.classList.add('form-control');
+            }
+        });
+        
+        // Format currency input
+        const valorInput = document.querySelector('input[name="valor_contratado"]');
+        if (valorInput) {
+            valorInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d)(\d{3})$/, '$1.$2');
+                value = value.replace(/(?=(\d{3})+(\D))\B/g, ',');
+                e.target.value = value;
+            });
+        }
+        
+        // Set today as max date for date input
+        const dateInput = document.querySelector('input[name="data_contratacao"]');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('max', today);
+        }
+        
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const requiredFields = form.querySelectorAll('input[required], select[required]');
+            let hasErrors = false;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    hasErrors = true;
+                } else {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                }
+            });
+            
+            if (hasErrors) {
+                e.preventDefault();
+                const firstError = form.querySelector('.is-invalid');
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        // Real-time validation
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                } else if (this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
