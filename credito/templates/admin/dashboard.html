@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Administrativo - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info border-0" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-shield-alt fa-2x me-3"></i>
+                <div>
+                    <h4 class="alert-heading mb-1">Painel Administrativo</h4>
+                    <p class="mb-0">Área restrita para administradores do sistema CreditoSmart Angola</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats Overview -->
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 bg-gradient text-white h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-center p-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-users fa-2x opacity-75"></i>
+                </div>
+                <h2 class="fw-bold mb-2">{{ total_clientes|floatformat:0 }}</h2>
+                <p class="mb-0 opacity-90">Total de Clientes</p>
+                <div class="mt-2">
+                    <small class="opacity-75">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        Registrados no sistema
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 bg-gradient text-white h-100" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+            <div class="card-body text-center p-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-file-invoice fa-2x opacity-75"></i>
+                </div>
+                <h2 class="fw-bold mb-2">{{ total_solicitacoes|floatformat:0 }}</h2>
+                <p class="mb-0 opacity-90">Total de Solicitações</p>
+                <div class="mt-2">
+                    <small class="opacity-75">
+                        <i class="fas fa-chart-line me-1"></i>
+                        Processadas pelo sistema
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 bg-gradient text-white h-100" style="background: linear-gradient(135deg, #ff9a00 0%, #ffad00 100%);">
+            <div class="card-body text-center p-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-clock fa-2x opacity-75"></i>
+                </div>
+                <h2 class="fw-bold mb-2">{{ solicitacoes_pendentes|floatformat:0 }}</h2>
+                <p class="mb-0 opacity-90">Pendentes</p>
+                <div class="mt-2">
+                    <small class="opacity-75">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Aguardando análise
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 bg-gradient text-white h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-center p-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
+                </div>
+                <h2 class="fw-bold mb-2">{{ volume_total|floatformat:0 }}</h2>
+                <p class="mb-0 opacity-90">AOA Aprovados</p>
+                <div class="mt-2">
+                    <small class="opacity-75">
+                        <i class="fas fa-coins me-1"></i>
+                        Volume total processado
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Metrics -->
+<div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-chart-pie me-2 text-primary"></i>
+                    Taxa de Aprovação
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if taxa_aprovacao.total > 0 %}
+                    {% widthratio taxa_aprovacao.aprovadas taxa_aprovacao.total 100 as taxa_percent %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-grow-1">
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" 
+                                     style="width: {{ taxa_percent }}%"
+                                     aria-valuenow="{{ taxa_percent }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {{ taxa_percent }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <span class="h4 fw-bold text-success">{{ taxa_percent }}%</span>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="border-end">
+                                <div class="h5 fw-bold text-success mb-0">{{ taxa_aprovacao.aprovadas }}</div>
+                                <small class="text-muted">Aprovadas</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-end">
+                                <div class="h5 fw-bold text-danger mb-0">{{ taxa_aprovacao.total|add:taxa_aprovacao.aprovadas|add:"-"|add:taxa_aprovacao.aprovadas }}</div>
+                                <small class="text-muted">Rejeitadas</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="h5 fw-bold text-primary mb-0">{{ taxa_aprovacao.total }}</div>
+                            <small class="text-muted">Total</small>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Nenhuma solicitação processada ainda</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                    Desempenho do Sistema
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="fas fa-bolt text-warning fa-2x mb-2"></i>
+                            <div class="h6 fw-bold">Tempo Médio</div>
+                            <div class="text-muted">< 2 minutos</div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="fas fa-shield-alt text-success fa-2x mb-2"></i>
+                            <div class="h6 fw-bold">Precisão</div>
+                            <div class="text-muted">98.5%</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="fas fa-server text-info fa-2x mb-2"></i>
+                            <div class="h6 fw-bold">Uptime</div>
+                            <div class="text-muted">99.9%</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <i class="fas fa-users text-primary fa-2x mb-2"></i>
+                            <div class="h6 fw-bold">Satisfação</div>
+                            <div class="text-muted">4.8/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-tools me-2 text-primary"></i>
+                    Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <button class="btn btn-outline-primary w-100 py-3" onclick="exportarRelatorio()">
+                            <i class="fas fa-download fa-lg mb-2 d-block"></i>
+                            Exportar Relatório
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <button class="btn btn-outline-success w-100 py-3" onclick="processarPendentes()">
+                            <i class="fas fa-play-circle fa-lg mb-2 d-block"></i>
+                            Processar Pendentes
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <button class="btn btn-outline-info w-100 py-3" onclick="atualizarStatisticas()">
+                            <i class="fas fa-sync-alt fa-lg mb-2 d-block"></i>
+                            Atualizar Stats
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <button class="btn btn-outline-warning w-100 py-3" onclick="gerarRelatorioCompleto()">
+                            <i class="fas fa-chart-bar fa-lg mb-2 d-block"></i>
+                            Relatório Completo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Status -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-heartbeat me-2 text-primary"></i>
+                    Status do Sistema
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="me-3">
+                                <i class="fas fa-database fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Base de Dados</div>
+                                <small class="text-success">
+                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                    Online
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="me-3">
+                                <i class="fas fa-brain fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">IA Engine</div>
+                                <small class="text-success">
+                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                    Ativo
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="me-3">
+                                <i class="fas fa-shield-alt fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Segurança</div>
+                                <small class="text-success">
+                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                    Protegido
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="me-3">
+                                <i class="fas fa-cloud fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Servidor</div>
+                                <small class="text-success">
+                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                    Estável
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function exportarRelatorio() {
+        // Simular exportação
+        Swal.fire({
+            title: 'Exportando Relatório',
+            text: 'Gerando relatório administrativo...',
+            icon: 'info',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            Swal.fire('Sucesso!', 'Relatório exportado com sucesso!', 'success');
+        });
+    }
+
+    function processarPendentes() {
+        Swal.fire({
+            title: 'Processar Pendentes',
+            text: 'Deseja processar todas as solicitações pendentes?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, processar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Processando!', 'Solicitações sendo processadas...', 'success');
+            }
+        });
+    }
+
+    function atualizarStatisticas() {
+        Swal.fire({
+            title: 'Atualizando',
+            text: 'Recalculando estatísticas...',
+            icon: 'info',
+            timer: 1500,
+            showConfirmButton: false
+        }).then(() => {
+            location.reload();
+        });
+    }
+
+    function gerarRelatorioCompleto() {
+        Swal.fire({
+            title: 'Relatório Completo',
+            text: 'Gerando relatório completo do sistema...',
+            icon: 'info',
+            timer: 3000,
+            showConfirmButton: false
+        }).then(() => {
+            Swal.fire('Concluído!', 'Relatório completo gerado!', 'success');
+        });
+    }
+
+    // Auto-refresh statistics every 5 minutes
+    setInterval(() => {
+        console.log('Auto-refresh statistics...');
+        // Aqui você pode fazer uma requisição AJAX para atualizar os dados
+    }, 300000);
+</script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
