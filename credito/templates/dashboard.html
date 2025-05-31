@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 fw-bold mb-2">
+                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                    Dashboard
+                </h1>
+                <p class="text-muted mb-0">
+                    Bem-vindo de volta, {{ cliente.nome }}! 
+                    <span class="text-success">
+                        <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                        Online
+                    </span>
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'credito_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Nova Solicitação
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <h3 class="fw-bold text-primary">{{ total_solicitacoes }}</h3>
+                <p class="text-muted mb-0">Total de Solicitações</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-success bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="fw-bold text-success">{{ solicitacoes_aprovadas }}</h3>
+                <p class="text-muted mb-0">Aprovadas</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-warning bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="fw-bold text-warning">{{ solicitacoes_pendentes }}</h3>
+                <p class="text-muted mb-0">Pendentes</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-body text-center p-4">
+                <div class="bg-info bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3 class="fw-bold text-info">{{ valor_total_aprovado|floatformat:0 }}</h3>
+                <p class="text-muted mb-0">AOA Aprovados</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Applications -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-history me-2 text-primary"></i>
+                        Últimas Solicitações
+                    </h5>
+                    <a href="{% url 'credito_list' %}" class="btn btn-outline-primary btn-sm">
+                        Ver Todas
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if ultimas_solicitacoes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0 fw-semibold">Data</th>
+                                    <th class="border-0 fw-semibold">Valor</th>
+                                    <th class="border-0 fw-semibold">Status</th>
+                                    <th class="border-0 fw-semibold">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitacao in ultimas_solicitacoes %}
+                                <tr>
+                                    <td class="align-middle">
+                                        <div>
+                                            <div class="fw-semibold">{{ solicitacao.data_solicitacao|date:"d/m/Y" }}</div>
+                                            <small class="text-muted">{{ solicitacao.data_solicitacao|date:"H:i" }}</small>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="fw-semibold">{{ solicitacao.valor_solicitado|floatformat:2 }} AOA</div>
+                                        {% if solicitacao.valor_aprovado %}
+                                            <small class="text-success">
+                                                Aprovado: {{ solicitacao.valor_aprovado|floatformat:2 }} AOA
+                                            </small>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        {% if solicitacao.status == 'APROVADO' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Aprovado
+                                            </span>
+                                        {% elif solicitacao.status == 'REJEITADO' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>Rejeitado
+                                            </span>
+                                        {% elif solicitacao.status == 'PENDENTE' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>Pendente
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-question me-1"></i>{{ solicitacao.status }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="{% url 'credito_detail' solicitacao.pk %}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i>Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox display-4 text-muted mb-3"></i>
+                        <h5 class="text-muted">Nenhuma solicitação encontrada</h5>
+                        <p class="text-muted">Faça sua primeira solicitação de crédito</p>
+                        <a href="{% url 'credito_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Nova Solicitação
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Summary -->
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-user me-2 text-primary"></i>
+                    Perfil do Cliente
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-user display-6"></i>
+                    </div>
+                    <h5 class="fw-bold">{{ cliente.nome }}</h5>
+                    <p class="text-muted mb-0">{{ cliente.email }}</p>
+                </div>
+                
+                <div class="border-top pt-3">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <div class="fw-bold text-primary">{{ cliente.idade|default:"--" }}</div>
+                            <small class="text-muted">Idade</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="fw-bold text-success">{{ cliente.renda_mensal|floatformat:0|default:"--" }}</div>
+                            <small class="text-muted">Renda (AOA)</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">Completude do Perfil</small>
+                        <small class="fw-semibold">75%</small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 75%"></div>
+                    </div>
+                    <small class="text-muted">Complete seu perfil para melhores ofertas</small>
+                </div>
+                
+                <div class="mt-4 d-grid">
+                    <a href="{% url 'perfil' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-bolt me-2 text-primary"></i>
+                    Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="{% url 'credito_create' %}" class="btn btn-light w-100 h-100 p-3 text-start border">
+                            <i class="fas fa-plus-circle text-primary me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Nova Solicitação</div>
+                                <small class="text-muted">Solicitar novo crédito</small>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="{% url 'historico_create' %}" class="btn btn-light w-100 h-100 p-3 text-start border">
+                            <i class="fas fa-history text-success me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Adicionar Histórico</div>
+                                <small class="text-muted">Histórico de crédito</small>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="{% url 'relatorios' %}" class="btn btn-light w-100 h-100 p-3 text-start border">
+                            <i class="fas fa-chart-bar text-info me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Relatórios</div>
+                                <small class="text-muted">Análises e gráficos</small>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="{% url 'contact' %}" class="btn btn-light w-100 h-100 p-3 text-start border">
+                            <i class="fas fa-headset text-warning me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Suporte</div>
+                                <small class="text-muted">Precisa de ajuda?</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-refresh status every 30 seconds
+    setInterval(function() {
+        // You can add AJAX call here to refresh pending applications status
+        console.log('Checking for status updates...');
+    }, 30000);
+    
+    // Add loading states to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.type === 'submit' || this.href) {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Carregando...';
+                this.disabled = true;
+                
+                // Re-enable after 3 seconds (fallback)
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 3000);
+            }
+        });
+    });
+</script>
+{% endblock %}
