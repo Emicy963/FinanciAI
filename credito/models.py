@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+from datetime import datetime
 
 class Cliente(models.Model):
     TIPOS_DOCUMENTOS_CHOICES = [
@@ -82,3 +83,15 @@ class Cliente(models.Model):
     # Dados do sistema
     data_cadastro = models.DateTimeField(auto_now_add=True)
     ativo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.usuario.first_name} {self.usuario.last_name} - {self.numero_documento}"
+    
+    @property
+    def idade(self):
+        today = datetime.date.today()
+        return today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
+    
+    @property
+    def nome_completo(self):
+        return f"{self.usuario.first_name} {self.usuario.last_name}"
