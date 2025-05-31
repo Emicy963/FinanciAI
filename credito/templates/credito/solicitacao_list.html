@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block title %}Minhas Solicitações - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 fw-bold mb-2">
+                    <i class="fas fa-credit-card me-2 text-primary"></i>
+                    Minhas Solicitações
+                </h1>
+                <p class="text-muted mb-0">Gerencie todas as suas solicitações de crédito</p>
+            </div>
+            <div>
+                <a href="{% url 'credito_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Nova Solicitação
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters Card -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="fw-semibold mb-0">
+                    <i class="fas fa-filter me-2 text-primary"></i>
+                    Filtros
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Status</label>
+                        {{ filtro_form.status }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Data Início</label>
+                        {{ filtro_form.data_inicio }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Data Fim</label>
+                        {{ filtro_form.data_fim }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Valor Mín.</label>
+                        {{ filtro_form.valor_min }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-semibold">Valor Máx.</label>
+                        {{ filtro_form.valor_max }}
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Solicitações List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-body p-0">
+                {% if solicitacoes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0 fw-semibold py-3 px-4">
+                                        <i class="fas fa-calendar me-1"></i>Data
+                                    </th>
+                                    <th class="border-0 fw-semibold py-3">
+                                        <i class="fas fa-money-bill me-1"></i>Valor Solicitado
+                                    </th>
+                                    <th class="border-0 fw-semibold py-3">
+                                        <i class="fas fa-check-circle me-1"></i>Valor Aprovado
+                                    </th>
+                                    <th class="border-0 fw-semibold py-3">
+                                        <i class="fas fa-info-circle me-1"></i>Status
+                                    </th>
+                                    <th class="border-0 fw-semibold py-3">
+                                        <i class="fas fa-percentage me-1"></i>Taxa
+                                    </th>
+                                    <th class="border-0 fw-semibold py-3 text-center">
+                                        <i class="fas fa-cogs me-1"></i>Ações
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitacao in solicitacoes %}
+                                <tr class="align-middle">
+                                    <td class="px-4">
+                                        <div>
+                                            <div class="fw-semibold">{{ solicitacao.data_solicitacao|date:"d/m/Y" }}</div>
+                                            <small class="text-muted">{{ solicitacao.data_solicitacao|date:"H:i" }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-primary">
+                                            {{ solicitacao.valor_solicitado|floatformat:2 }} AOA
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ solicitacao.finalidade|truncatechars:30 }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% if solicitacao.valor_aprovado %}
+                                            <div class="fw-semibold text-success">
+                                                {{ solicitacao.valor_aprovado|floatformat:2 }} AOA
+                                            </div>
+                                            {% if solicitacao.data_aprovacao %}
+                                                <small class="text-muted">
+                                                    {{ solicitacao.data_aprovacao|date:"d/m/Y" }}
+                                                </small>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">--</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if solicitacao.status == 'APROVADO' %}
+                                            <span class="badge bg-success px-3 py-2">
+                                                <i class="fas fa-check me-1"></i>Aprovado
+                                            </span>
+                                        {% elif solicitacao.status == 'REJEITADO' %}
+                                            <span class="badge bg-danger px-3 py-2">
+                                                <i class="fas fa-times me-1"></i>Rejeitado
+                                            </span>
+                                        {% elif solicitacao.status == 'PENDENTE' %}
+                                            <span class="badge bg-warning px-3 py-2">
+                                                <i class="fas fa-clock me-1"></i>Pendente
+                                            </span>
+                                        {% elif solicitacao.status == 'EM_ANALISE' %}
+                                            <span class="badge bg-info px-3 py-2">
+                                                <i class="fas fa-search me-1"></i>Em Análise
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary px-3 py-2">
+                                                {{ solicitacao.status }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if solicitacao.taxa_juros %}
+                                            <span class="fw-semibold">{{ solicitacao.taxa_juros }}%</span>
+                                            <br><small class="text-muted">ao ano</small>
+                                        {% else %}
+                                            <span class="text-muted">--</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'credito_detail' solicitacao.pk %}" 
+                                               class="btn btn-outline-primary btn-sm"
+                                               title="Ver Detalhes">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if solicitacao.status == 'PENDENTE' %}
+                                                <button class="btn btn-outline-info btn-sm process-btn" 
+                                                        data-id="{{ solicitacao.pk }}"
+                                                        title="Processar Análise">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                        <div class="card-footer bg-white border-0 py-3">
+                            <nav aria-label="Paginação">
+                                <ul class="pagination justify-content-center mb-0">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=1{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.data_inicio %}&data_inicio={{ request.GET.data_inicio }}{% endif %}{% if request.GET.data_fim %}&data_fim={{ request.GET.data_fim }}{% endif %}{% if request.GET.valor_min %}&valor_min={{ request.GET.valor_min }}{% endif %}{% if request.GET.valor_max %}&valor_max={{ request.GET.valor_max }}{% endif %}">
+                                                <i class="fas fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.data_inicio %}&data_inicio={{ request.GET.data_inicio }}{% endif %}{% if request.GET.data_fim %}&data_fim={{ request.GET.data_fim }}{% endif %}{% if request.GET.valor_min %}&valor_min={{ request.GET.valor_min }}{% endif %}{% if request.GET.valor_max %}&valor_max={{ request.GET.valor_max }}{% endif %}">
+                                                <i class="fas fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="page-item active">
+                                        <span class="page-link">
+                                            {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                    </li>
+
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.data_inicio %}&data_inicio={{ request.GET.data_inicio }}{% endif %}{% if request.GET.data_fim %}&data_fim={{ request.GET.data_fim }}{% endif %}{% if request.GET.valor_min %}&valor_min={{ request.GET.valor_min }}{% endif %}{% if request.GET.valor_max %}&valor_max={{ request.GET.valor_max }}{% endif %}">
+                                                <i class="fas fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.data_inicio %}&data_inicio={{ request.GET.data_inicio }}{% endif %}{% if request.GET.data_fim %}&data_fim={{ request.GET.data_fim }}{% endif %}{% if request.GET.valor_min %}&valor_min={{ request.GET.valor_min }}{% endif %}{% if request.GET.valor_max %}&valor_max={{ request.GET.valor_max }}{% endif %}">
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox display-1 text-muted mb-4"></i>
+                        <h4 class="text-muted mb-3">Nenhuma solicitação encontrada</h4>
+                        <p class="text-muted mb-4">
+                            {% if request.GET %}
+                                Tente ajustar os filtros ou limpar a busca.
+                            {% else %}
+                                Você ainda não fez nenhuma solicitação de crédito.
+                            {% endif %}
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'credito_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Nova Solicitação
+                            </a>
+                            {% if request.GET %}
+                                <a href="{% url 'credito_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Limpar Filtros
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Processing Modal -->
+<div class="modal fade" id="processModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-cogs me-2"></i>Processando Análise
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p>Analisando sua solicitação de crédito...</p>
+                <small class="text-muted">Isso pode levar alguns segundos.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Process buttons
+    const processButtons = document.querySelectorAll('.process-btn');
+    const modal = new bootstrap.Modal(document.getElementById('processModal'));
+    
+    processButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const solicitacaoId = this.getAttribute('data-id');
+            
+            // Show loading modal
+            modal.show();
+            
+            // Make AJAX request
+            fetch(`/credito/processar/${solicitacaoId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                modal.hide();
+                
+                if (data.success) {
+                    // Show success message
+                    const alertClass = data.aprovado ? 'alert-success' : 'alert-warning';
+                    const icon = data.aprovado ? 'fa-check-circle' : 'fa-info-circle';
+                    
+                    const alertHtml = `
+                        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                            <i class="fas ${icon} me-2"></i>
+                            ${data.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+                    
+                    document.querySelector('.container').insertAdjacentHTML('afterbegin', alertHtml);
+                    
+                    // Reload page after 2 seconds
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    // Show error message
+                    const alertHtml = `
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            ${data.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+                    
+                    document.querySelector('.container').insertAdjacentHTML('afterbegin', alertHtml);
+                }
+            })
+            .catch(error => {
+                modal.hide();
+                console.error('Error:', error);
+                
+                const alertHtml = `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Erro ao processar solicitação. Tente novamente.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                
+                document.querySelector('.container').insertAdjacentHTML('afterbegin', alertHtml);
+            });
+        });
+    });
+    
+    // Auto-hide alerts
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            if (alert.classList.contains('show')) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        });
+    }, 5000);
+});
+</script>
+{% endblock %}
