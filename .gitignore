@@ -1,0 +1,46 @@
+
+---
+
+### 2. **Criando o `.gitignore`**
+
+O `.gitignore` é um arquivo que define quais arquivos e pastas o Git deve ignorar. Aqui está um modelo para um projeto Django:
+
+```gitignore
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Ambiente virtual
+.venv/
+.env/
+
+# Arquivos de configuração
+*.env
+*.ini
+*.cfg
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.hintrc
+
+# Arquivos de log e cache
+*.log
+*.cache
+
+# Arquivos estáticos e de mídia
+staticfiles/
+media/
+
+# Banco de dados
+*.sqlite3
+*.db
+
+# Outros
+.DS_Store
