@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Exclusão - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-danger text-white text-center py-4">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <h3 class="fw-bold mb-0">Confirmar Exclusão</h3>
+            </div>
+            
+            <div class="card-body p-5">
+                <!-- Alert Warning -->
+                <div class="alert alert-warning border-0 mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Atenção!</h5>
+                            <p class="mb-0">Esta ação não pode ser desfeita. O histórico será permanentemente removido.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Record Details -->
+                <div class="bg-light rounded p-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-file-alt me-2 text-primary"></i>
+                        Detalhes do Registro
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Instituição:</label>
+                            <div class="fw-bold">{{ object.instituicao }}</div>
+                        </div>
+                        
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Tipo de Crédito:</label>
+                            <div class="fw-bold">
+                                {% if object.tipo_credito == 'PESSOAL' %}
+                                    <span class="badge bg-primary">Pessoal</span>
+                                {% elif object.tipo_credito == 'HABITACAO' %}
+                                    <span class="badge bg-success">Habitação</span>
+                                {% elif object.tipo_credito == 'AUTOMOVEL' %}
+                                    <span class="badge bg-info">Automóvel</span>
+                                {% elif object.tipo_credito == 'EMPRESARIAL' %}
+                                    <span class="badge bg-warning">Empresarial</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ object.get_tipo_credito_display }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Valor:</label>
+                            <div class="fw-bold text-success">
+                                <i class="fas fa-money-bill-wave me-1"></i>
+                                {{ object.valor|floatformat:2 }} AOA
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Status:</label>
+                            <div class="fw-bold">
+                                {% if object.status == 'ATIVO' %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Ativo
+                                    </span>
+                                {% elif object.status == 'QUITADO' %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-check-double me-1"></i>Quitado
+                                    </span>
+                                {% elif object.status == 'INADIMPLENTE' %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Inadimplente
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ object.get_status_display }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Data de Contratação:</label>
+                            <div class="fw-bold">
+                                <i class="fas fa-calendar me-1"></i>
+                                {{ object.data_contratacao|date:"d/m/Y" }}
+                            </div>
+                        </div>
+                        
+                        {% if object.data_quitacao %}
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label text-muted small">Data de Quitação:</label>
+                            <div class="fw-bold">
+                                <i class="fas fa-calendar-check me-1"></i>
+                                {{ object.data_quitacao|date:"d/m/Y" }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if object.observacoes %}
+                    <div class="mt-3">
+                        <label class="form-label text-muted small">Observações:</label>
+                        <div class="fw-bold">{{ object.observacoes }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Confirmation Form -->
+                <form method="post" class="text-center">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <p class="text-muted mb-3">
+                            Tem certeza de que deseja excluir este histórico de crédito?
+                        </p>
+                        <div class="form-check d-inline-block">
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <label class="form-check-label" for="confirmDelete">
+                                Sim, entendo que esta ação é irreversível
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="{% url 'historico_list' %}" class="btn btn-secondary btn-lg px-4">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Cancelar
+                        </a>
+                        
+                        <button type="submit" class="btn btn-danger btn-lg px-4" id="deleteButton" disabled>
+                            <i class="fas fa-trash-alt me-2"></i>
+                            Excluir Definitivamente
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card-footer bg-light text-center py-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Esta exclusão afetará apenas o histórico. Não impacta outras funcionalidades do sistema.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mt-4">
+    <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard' %}" class="text-decoration-none">
+                <i class="fas fa-home me-1"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'historico_list' %}" class="text-decoration-none">
+                <i class="fas fa-history me-1"></i>Histórico
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-trash me-1"></i>Excluir
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmCheckbox = document.getElementById('confirmDelete');
+        const deleteButton = document.getElementById('deleteButton');
+        
+        // Enable/disable delete button based on checkbox
+        confirmCheckbox.addEventListener('change', function() {
+            deleteButton.disabled = !this.checked;
+            
+            if (this.checked) {
+                deleteButton.classList.remove('btn-danger');
+                deleteButton.classList.add('btn-danger');
+                deleteButton.style.opacity = '1';
+            } else {
+                deleteButton.style.opacity = '0.6';
+            }
+        });
+        
+        // Add confirmation dialog
+        deleteButton.addEventListener('click', function(e) {
+            if (!confirmCheckbox.checked) {
+                e.preventDefault();
+                return;
+            }
+            
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Última Confirmação',
+                text: 'Esta é sua última chance de cancelar. Deseja realmente excluir este histórico?',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true,
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Excluindo...',
+                        text: 'Removendo histórico do sistema',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit the form
+                    setTimeout(() => {
+                        document.querySelector('form').submit();
+                    }, 1000);
+                }
+            });
+        });
+        
+        // Add hover effects
+        deleteButton.addEventListener('mouseenter', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 5px 15px rgba(220, 38, 38, 0.4)';
+            }
+        });
+        
+        deleteButton.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+</script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
