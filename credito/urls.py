@@ -34,12 +34,6 @@ urlpatterns = [
     
     # URLs administrativas (para staff)
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    
-    # APIs e endpoints AJAX
-    path('api/solicitacoes/<int:pk>/status/', views.get_solicitacao_status, name='api_solicitacao_status'),
-    path('api/cliente/score/', views.get_cliente_score, name='api_cliente_score'),
-    path('api/relatorios/dados/', views.get_relatorios_dados, name='api_relatorios_dados'),
 ]
 
 # URLs auxiliares que podem ser adicionadas conforme necessário
-app_name = 'credito'

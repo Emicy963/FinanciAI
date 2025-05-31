@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('credito/', include('credito.urls'))
+    path('', include('credito.urls'))
 ]
 
 # Configuração para servir arquivos de mídia durante desenvolvimento
