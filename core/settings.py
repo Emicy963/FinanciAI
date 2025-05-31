@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'credito.apps.CreditoConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
