@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}CreditoSmart Angola - Sistema Inteligente de Análise de Crédito{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="jumbotron bg-gradient text-white p-5 rounded-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-4">
+                        <i class="fas fa-robot me-3"></i>
+                        Análise Inteligente de Crédito
+                    </h1>
+                    <p class="lead mb-4">
+                        Sistema automatizado de validação de crédito desenvolvido especialmente 
+                        para Angola. Análise rápida, segura e baseada em inteligência artificial.
+                    </p>
+                    {% if not user.is_authenticated %}
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'register' %}" class="btn btn-light btn-lg px-4">
+                                <i class="fas fa-user-plus me-2"></i>Começar Agora
+                            </a>
+                            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">
+                                <i class="fas fa-info-circle me-2"></i>Saiba Mais
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-4">
+                            <i class="fas fa-tachometer-alt me-2"></i>Ir ao Dashboard
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-chart-line display-1 opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stats-card info text-center">
+            <i class="fas fa-users display-4 mb-3"></i>
+            <h3 class="fw-bold">{{ total_clientes|floatformat:0 }}</h3>
+            <p class="mb-0 opacity-75">Clientes Registrados</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stats-card warning text-center">
+            <i class="fas fa-file-invoice display-4 mb-3"></i>
+            <h3 class="fw-bold">{{ total_solicitacoes|floatformat:0 }}</h3>
+            <p class="mb-0 opacity-75">Solicitações Processadas</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stats-card success text-center">
+            <i class="fas fa-check-circle display-4 mb-3"></i>
+            <h3 class="fw-bold">{{ aprovacoes_mes|floatformat:0 }}</h3>
+            <p class="mb-0 opacity-75">Aprovações Este Mês</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stats-card text-center">
+            <i class="fas fa-money-bill-wave display-4 mb-3"></i>
+            <h3 class="fw-bold">{{ volume_aprovado|floatformat:0 }} AOA</h3>
+            <p class="mb-0 opacity-75">Volume Aprovado</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5 fw-bold">
+            <i class="fas fa-star me-2 text-primary"></i>
+            Por que escolher o CreditoSmart?
+        </h2>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="fas fa-bolt display-4 text-primary mb-3"></i>
+                <h4 class="fw-bold">Análise Rápida</h4>
+                <p class="text-muted">
+                    Resultado em poucos minutos através de algoritmos avançados 
+                    de machine learning e análise de dados.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="fas fa-shield-alt display-4 text-success mb-3"></i>
+                <h4 class="fw-bold">100% Seguro</h4>
+                <p class="text-muted">
+                    Seus dados estão protegidos com criptografia de ponta 
+                    e conformidade com regulamentações angolanas.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="fas fa-brain display-4 text-info mb-3"></i>
+                <h4 class="fw-bold">IA Avançada</h4>
+                <p class="text-muted">
+                    Sistema baseado em inteligência artificial adaptado 
+                    às especificidades do mercado angolano.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How it Works -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5 fw-bold">
+            <i class="fas fa-cogs me-2 text-primary"></i>
+            Como Funciona
+        </h2>
+    </div>
+    
+    <div class="col-lg-3 mb-4">
+        <div class="text-center">
+            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <span class="h3 mb-0">1</span>
+            </div>
+            <h5 class="fw-bold">Cadastro</h5>
+            <p class="text-muted">Crie sua conta e complete seu perfil com informações básicas</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 mb-4">
+        <div class="text-center">
+            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <span class="h3 mb-0">2</span>
+            </div>
+            <h5 class="fw-bold">Solicitação</h5>
+            <p class="text-muted">Preencha o formulário de solicitação de crédito</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 mb-4">
+        <div class="text-center">
+            <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <span class="h3 mb-0">3</span>
+            </div>
+            <h5 class="fw-bold">Análise</h5>
+            <p class="text-muted">Nosso sistema analisa automaticamente sua solicitação</p>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 mb-4">
+        <div class="text-center">
+            <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <span class="h3 mb-0">4</span>
+            </div>
+            <h5 class="fw-bold">Resultado</h5>
+            <p class="text-muted">Receba o resultado e acompanhe pelo dashboard</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+{% if not user.is_authenticated %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-light border-0 p-5 text-center">
+            <h3 class="fw-bold mb-3">Pronto para começar?</h3>
+            <p class="lead mb-4 text-muted">
+                Junte-se a milhares de angolanos que já confiam no CreditoSmart para suas necessidades de crédito.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-rocket me-2"></i>Começar Agora
+                </a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg px-5">
+                    <i class="fas fa-envelope me-2"></i>Fale Conosco
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
