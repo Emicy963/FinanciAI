@@ -17,6 +17,7 @@ __pycache__/
 # Ambiente virtual
 .venv/
 .env/
+migrations/
 
 # Arquivos de configuração
 *.env
