@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+
+{% block title %}Contato - CreditoSmart Angola{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold mb-4">
+                <i class="fas fa-envelope me-3 text-primary"></i>
+                Entre em Contato
+            </h1>
+            <p class="lead text-muted">
+                Estamos aqui para ajudar! Entre em contato conosco através dos canais abaixo.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Contact Form -->
+    <div class="col-lg-8 mb-5">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Envie sua Mensagem
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" id="contactForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nome" class="form-label fw-bold">
+                                <i class="fas fa-user me-1 text-primary"></i>
+                                Nome Completo *
+                            </label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label fw-bold">
+                                <i class="fas fa-envelope me-1 text-primary"></i>
+                                Email *
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telefone" class="form-label fw-bold">
+                                <i class="fas fa-phone me-1 text-primary"></i>
+                                Telefone
+                            </label>
+                            <input type="tel" class="form-control" id="telefone" name="telefone">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="assunto" class="form-label fw-bold">
+                                <i class="fas fa-tag me-1 text-primary"></i>
+                                Assunto *
+                            </label>
+                            <select class="form-select" id="assunto" name="assunto" required>
+                                <option value="">Selecione um assunto</option>
+                                <option value="duvida_geral">Dúvida Geral</option>
+                                <option value="suporte_tecnico">Suporte Técnico</option>
+                                <option value="solicitacao_credito">Solicitação de Crédito</option>
+                                <option value="parceria">Parceria</option>
+                                <option value="reclamacao">Reclamação</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mensagem" class="form-label fw-bold">
+                            <i class="fas fa-comment me-1 text-primary"></i>
+                            Mensagem *
+                        </label>
+                        <textarea class="form-control" id="mensagem" name="mensagem" rows="6" 
+                                placeholder="Descreva sua dúvida ou solicitação em detalhes..." required></textarea>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Enviar Mensagem
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Info -->
+    <div class="col-lg-4 mb-5">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-success text-white py-3">
+                <h4 class="mb-0 fw-bold">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Informações de Contato
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 40px; height: 40px;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Endereço</h6>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0 ms-5">
+                        Rua da Missão, Ingombota<br>
+                        Luanda, Angola
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 40px; height: 40px;">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Telefone</h6>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0 ms-5">
+                        +244 900 000 000<br>
+                        +244 923 000 000
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 40px; height: 40px;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Email</h6>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0 ms-5">
+                        info@creditosmart.ao<br>
+                        suporte@creditosmart.ao
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 40px; height: 40px;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Horário</h6>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0 ms-5">
+                        Segunda à Sexta: 8h - 18h<br>
+                        Sábado: 8h - 13h
+                    </p>
+                </div>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <h6 class="fw-bold mb-3">Siga-nos nas Redes Sociais</h6>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-info btn-sm">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-danger btn-sm">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5 fw-bold">
+            <i class="fas fa-question-circle me-2 text-primary"></i>
+            Perguntas Frequentes
+        </h2>
+    </div>
+    
+    <div class="col-12">
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item border-0 mb-3">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Como funciona a análise de crédito?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Nossa análise utiliza algoritmos de inteligência artificial que avaliam múltiplos fatores como histórico financeiro, 
+                        renda, capacidade de pagamento e outros dados relevantes para determinar o score de crédito.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Quanto tempo demora para receber o resultado?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        O resultado da análise é gerado automaticamente em poucos minutos após o envio da solicitação. 
+                        Você receberá uma notificação por email e poderá acompanhar pelo dashboard.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Meus dados estão seguros?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Sim! Utilizamos criptografia de ponta e seguimos todas as normas de segurança e privacidade. 
+                        Seus dados são protegidos e nunca compartilhados com terceiros sem sua autorização.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Posso contestar o resultado da análise?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Sim, você pode solicitar uma revisão da análise através do nosso suporte. 
+                        Nossa equipe revisará seu caso e fornecerá explicações detalhadas sobre os critérios utilizados.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simulação de envio (aqui você implementaria o envio real)
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>Enviado!';
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-success');
+        
+        // Reset form
+        this.reset();
+        
+        // Show success message
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+        alert.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>
+            Mensagem enviada com sucesso! Entraremos em contato em breve.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        this.appendChild(alert);
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-success');
+            submitBtn.classList.add('btn-primary');
+        }, 3000);
+    }, 2000);
+});
+</script>
+{% endblock %}
