@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes da Solicitação #{{ solicitacao.id }} - FinanciAI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 fw-bold mb-2">
+                    <i class="fas fa-file-alt me-2 text-primary"></i>
+                    Solicitação #{{ solicitacao.id }}
+                </h1>
+                <p class="text-muted mb-0">
+                    Criada em {{ solicitacao.data_solicitacao|date:"d/m/Y às H:i" }}
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'credito_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+                {% if solicitacao.status == 'PENDENTE' %}
+                    <button class="btn btn-primary" onclick="processarAnalise({{ solicitacao.id }})">
+                        <i class="fas fa-sync-alt me-2"></i>Processar Análise
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Status Card -->
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>
+                    Status da Solicitação
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    {% if solicitacao.status == 'APROVADO' %}
+                        <div class="bg-success bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-check fa-2x"></i>
+                        </div>
+                        <h4 class="text-success fw-bold">APROVADO</h4>
+                        <p class="text-muted">Parabéns! Sua solicitação foi aprovada.</p>
+                    {% elif solicitacao.status == 'REJEITADO' %}
+                        <div class="bg-danger bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-times fa-2x"></i>
+                        </div>
+                        <h4 class="text-danger fw-bold">REJEITADO</h4>
+                        <p class="text-muted">Infelizmente sua solicitação foi rejeitada.</p>
+                    {% elif solicitacao.status == 'PENDENTE' %}
+                        <div class="bg-warning bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <h4 class="text-warning fw-bold">PENDENTE</h4>
+                        <p class="text-muted">Sua solicitação está sendo analisada.</p>
+                    {% else %}
+                        <div class="bg-info bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-hourglass-half fa-2x"></i>
+                        </div>
+                        <h4 class="text-info fw-bold">EM ANÁLISE</h4>
+                        <p class="text-muted">Processando sua solicitação...</p>
+                    {% endif %}
+                </div>
+
+                <!-- Dates -->
+                <div class="border-top pt-3">
+                    <div class="row text-center">
+                        <div class="col-12 mb-2">
+                            <small class="text-muted d-block">Data de Solicitação</small>
+                            <strong>{{ solicitacao.data_solicitacao|date:"d/m/Y H:i" }}</strong>
+                        </div>
+                        {% if solicitacao.data_aprovacao %}
+                        <div class="col-12">
+                            <small class="text-muted d-block">Data de Aprovação</small>
+                            <strong class="text-success">{{ solicitacao.data_aprovacao|date:"d/m/Y H:i" }}</strong>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Card -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-list me-2 text-primary"></i>
+                    Detalhes da Solicitação
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">VALOR SOLICITADO</label>
+                        <div class="h5 text-primary">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            {{ solicitacao.valor_solicitado|floatformat:2 }} AOA
+                        </div>
+                    </div>
+                    
+                    {% if solicitacao.valor_aprovado %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">VALOR APROVADO</label>
+                        <div class="h5 text-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            {{ solicitacao.valor_aprovado|floatformat:2 }} AOA
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">PRAZO</label>
+                        <div class="h6">
+                            <i class="fas fa-calendar-alt me-2 text-info"></i>
+                            {{ solicitacao.prazo_meses }} meses
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">FINALIDADE</label>
+                        <div class="h6">
+                            <i class="fas fa-target me-2 text-warning"></i>
+                            {{ solicitacao.get_finalidade_display }}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">RENDA MENSAL</label>
+                        <div class="h6">
+                            <i class="fas fa-wallet me-2 text-secondary"></i>
+                            {{ solicitacao.renda_mensal|floatformat:2 }} AOA
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">PROFISSÃO</label>
+                        <div class="h6">
+                            <i class="fas fa-briefcase me-2 text-dark"></i>
+                            {{ solicitacao.profissao }}
+                        </div>
+                    </div>
+                    
+                    {% if solicitacao.taxa_juros %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">TAXA DE JUROS</label>
+                        <div class="h6 text-info">
+                            <i class="fas fa-percentage me-2"></i>
+                            {{ solicitacao.taxa_juros }}% ao ano
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if solicitacao.observacoes %}
+                <div class="mt-4">
+                    <label class="form-label fw-bold text-muted small">OBSERVAÇÕES</label>
+                    <div class="bg-light p-3 rounded">
+                        <i class="fas fa-comment me-2 text-secondary"></i>
+                        {{ solicitacao.observacoes }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analysis Details -->
+{% if analise %}
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-chart-line me-2 text-primary"></i>
+                    Análise Detalhada
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 text-center mb-4">
+                        <div class="border rounded p-3">
+                            <h6 class="text-muted mb-2">Score Total</h6>
+                            <div class="h2 fw-bold" style="color: {% if analise.score_total >= 700 %}var(--success-color){% elif analise.score_total >= 500 %}var(--warning-color){% else %}var(--danger-color){% endif %}">
+                                {{ analise.score_total }}
+                            </div>
+                            <small class="text-muted">de 1000</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold text-muted small">SCORE DE RENDA</label>
+                                <div class="progress mb-1" style="height: 8px;">
+                                    <div class="progress-bar bg-info" style="width: {{ analise.score_renda|floatformat:0 }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ analise.score_renda }}/100</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold text-muted small">SCORE DE EMPREGO</label>
+                                <div class="progress mb-1" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" style="width: {{ analise.score_emprego|floatformat:0 }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ analise.score_emprego }}/100</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold text-muted small">SCORE BANCÁRIO</label>
+                                <div class="progress mb-1" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: {{ analise.score_bancario|floatformat:0 }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ analise.score_bancario }}/100</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold text-muted small">SCORE DE HISTÓRICO</label>
+                                <div class="progress mb-1" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ analise.score_historico|floatformat:0 }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ analise.score_historico }}/100</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if analise.observacoes %}
+                <div class="mt-4">
+                    <label class="fw-bold text-muted small">OBSERVAÇÕES DA ANÁLISE</label>
+                    <div class="bg-light p-3 rounded mt-2">
+                        {{ analise.observacoes }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function processarAnalise(solicitacaoId) {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
+    btn.disabled = true;
+    
+    fetch(`/credito/processar-analise/${solicitacaoId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Erro: ' + data.message);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao processar análise');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+</script>
+{% endblock %}
