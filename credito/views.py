@@ -9,8 +9,10 @@ from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q, Count, Avg, Sum
+from django.db import transaction
 from django.utils import timezone
 import json
+import logging
 
 from .models import Cliente, SolicitacaoCredito, AnaliseCredito, HistoricoCredito
 from .forms import (
@@ -44,9 +46,10 @@ def contact(request):
         messages.success(request, 'Mensagem enviada com sucesso! Entraremos em contato em breve.')
         return redirect('contact')
     return render(request, 'contact.html')
+logger = logging.getLogger(__name__)
 
 def register(request):
-    """Registro de usuário e cliente (melhorado)"""
+    """Registro de usuário e cliente (corrigido)"""
     if request.user.is_authenticated:
         return redirect('dashboard')
         
@@ -54,14 +57,27 @@ def register(request):
         user_form = CustomUserCreationForm(request.POST)
         cliente_form = ClienteForm(request.POST)
         
+        # Debug: Log dos dados recebidos
+        logger.debug(f"POST data: {request.POST}")
+        logger.debug(f"User form errors: {user_form.errors}")
+        logger.debug(f"Cliente form errors: {cliente_form.errors}")
+        
         if user_form.is_valid() and cliente_form.is_valid():
             try:
-                user = user_form.save()
+                # Use transação para garantir consistência
+                with transaction.atomic():
+                    # Criar usuário
+                    user = user_form.save()
+                    
+                    # Criar cliente
+                    cliente = cliente_form.save(commit=False)
+                    cliente.usuario = user
+                    
+                    # Definir score inicial baseado em dados básicos
+                    cliente.score_credito = 100  # Score inicial padrão
+                    cliente.save()
                 
-                cliente = cliente_form.save(commit=False)
-                cliente.usuario = user
-                cliente.save()
-                
+                # Autenticar e fazer login
                 username = user_form.cleaned_data.get('username')
                 password = user_form.cleaned_data.get('password1')
                 user = authenticate(username=username, password=password)
@@ -70,7 +86,7 @@ def register(request):
                     login(request, user)
                     messages.success(
                         request, 
-                        f'Conta criada com sucesso! Bem-vindo ao CreditoSmart, {user.first_name or username}!'
+                        f'Conta criada com sucesso! Bem-vindo ao FinanciAI, {user.first_name}!'
                     )
                     return redirect('dashboard')
                 else:
@@ -78,9 +94,19 @@ def register(request):
                     return redirect('login')
                     
             except Exception as e:
+                logger.error(f'Erro ao criar conta: {str(e)}')
                 messages.error(request, f'Erro ao criar conta: {str(e)}')
         else:
-            messages.error(request, 'Por favor, corrija os erros abaixo.')
+            # Mostrar erros específicos
+            if user_form.errors:
+                for field, errors in user_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'Dados de usuário - {field}: {error}')
+            
+            if cliente_form.errors:
+                for field, errors in cliente_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'Dados pessoais - {field}: {error}')
     else:
         user_form = CustomUserCreationForm()
         cliente_form = ClienteForm()
@@ -91,7 +117,7 @@ def register(request):
     })
 
 def login_view(request):
-    """View de login alternativa (função)"""
+    """View de login melhorada"""
     if request.user.is_authenticated:
         return redirect('dashboard')
     
@@ -103,23 +129,28 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             
             if user is not None:
-                login(request, user)
-                messages.success(request, f'Bem-vindo de volta, {user.first_name or user.username}!')
-                
-                # Verifica se tem próxima página
-                next_page = request.GET.get('next', 'dashboard')
-                return redirect(next_page)
+                if user.is_active:
+                    login(request, user)
+                    messages.success(request, f'Bem-vindo de volta, {user.first_name or user.username}!')
+                    
+                    # Verifica se tem próxima página
+                    next_page = request.GET.get('next', 'dashboard')
+                    return redirect(next_page)
+                else:
+                    messages.error(request, 'Sua conta está desativada.')
             else:
-                messages.error(request, 'Credenciais inválidas.')
+                messages.error(request, 'Nome de usuário ou senha incorretos.')
         else:
-            messages.error(request, 'Por favor, corrija os erros abaixo.')
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = AuthenticationForm()
     
     return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
-    """View de logout (função)"""
+    """View de logout"""
     if request.user.is_authenticated:
         user_name = request.user.first_name or request.user.username
         logout(request)
