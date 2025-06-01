@@ -404,14 +404,32 @@ def relatorios(request):
         count=Count('id')
     ))
     
-    # Solicitações por mês (últimos 12 meses)
-    from django.db.models import TruncMonth
-    monthly_data = list(solicitacoes.annotate(
-        month=TruncMonth('data_solicitacao')
-    ).values('month').annotate(
-        count=Count('id'),
-        valor_total=Sum('valor_solicitado')
-    ).order_by('month'))
+    # Solicitações por mês (últimos 12 meses) - COMPATÍVEL COM VERSÕES ANTIGAS DO DJANGO
+    import datetime
+    from collections import defaultdict
+    
+    # Calcula o período dos últimos 12 meses
+    today = datetime.date.today()
+    one_year_ago = today - datetime.timedelta(days=365)
+    
+    # Filtra solicitações dos últimos 12 meses
+    solicitacoes_last12 = solicitacoes.filter(
+        data_solicitacao__gte=one_year_ago,
+        data_solicitacao__lte=today
+    )
+    
+    # Agrega dados por mês manualmente
+    monthly_dict = defaultdict(lambda: {'count': 0, 'valor_total': 0})
+    for s in solicitacoes_last12:
+        month_key = s.data_solicitacao.strftime('%Y-%m-01')  # Formato YYYY-MM-01
+        monthly_dict[month_key]['count'] += 1
+        monthly_dict[month_key]['valor_total'] += s.valor_solicitado
+    
+    # Prepara dados ordenados por mês
+    monthly_data = [
+        {'month': month, 'count': data['count'], 'valor_total': data['valor_total']}
+        for month, data in sorted(monthly_dict.items())
+    ]
     
     # Histórico de score (se disponível)
     analises = AnaliseCredito.objects.filter(
@@ -429,7 +447,7 @@ def relatorios(request):
     context = {
         'cliente': cliente,
         'status_data': json.dumps(status_data),
-        'monthly_data': json.dumps(monthly_data, default=str),
+        'monthly_data': json.dumps(monthly_data),
         'score_history': json.dumps(score_history),
         'total_solicitado': solicitacoes.aggregate(Sum('valor_solicitado'))['valor_solicitado__sum'] or 0,
         'total_aprovado': solicitacoes.filter(status='APROVADO').aggregate(Sum('valor_aprovado'))['valor_aprovado__sum'] or 0,
