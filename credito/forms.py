@@ -128,6 +128,60 @@ class ClienteForm(forms.ModelForm):
             }),
         }
 
+    # Campos adicionais para o usuário (não fazem parte do modelo Cliente)
+    nome_completo = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nome completo'
+        }),
+        label='Nome Completo'
+    )
+    
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'seu@email.com'
+        }),
+        label='Email'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Se estamos editando um cliente existente, preencher os campos do usuário
+        if self.instance and self.instance.pk and hasattr(self.instance, 'usuario'):
+            user = self.instance.usuario
+            self.fields['nome_completo'].initial = f"{user.first_name} {user.last_name}".strip()
+            self.fields['email'].initial = user.email
+
+    def save(self, commit=True):
+        cliente = super().save(commit=False)
+        
+        # Atualizar dados do usuário relacionado
+        if hasattr(cliente, 'usuario') and cliente.usuario:
+            user = cliente.usuario
+            nome_completo = self.cleaned_data.get('nome_completo', '')
+            email = self.cleaned_data.get('email', '')
+            
+            # Dividir nome completo em primeiro e último nome
+            nomes = nome_completo.split()
+            if nomes:
+                user.first_name = nomes[0]
+                user.last_name = ' '.join(nomes[1:]) if len(nomes) > 1 else ''
+            
+            user.email = email
+            
+            if commit:
+                user.save()
+        
+        if commit:
+            cliente.save()
+        
+        return cliente
+
     def clean_data_nascimento(self):
         data_nascimento = self.cleaned_data['data_nascimento']
         hoje = datetime.date.today()

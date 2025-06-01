@@ -28,15 +28,16 @@
                 <form method="post">
                     {% csrf_token %}
                     
+                    <!-- Informações do Usuário -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.nome.id_for_label }}" class="form-label fw-semibold">
+                            <label for="{{ form.nome_completo.id_for_label }}" class="form-label fw-semibold">
                                 <i class="fas fa-user me-1"></i>Nome Completo
                             </label>
-                            {{ form.nome }}
-                            {% if form.nome.errors %}
+                            {{ form.nome_completo }}
+                            {% if form.nome_completo.errors %}
                                 <div class="text-danger small mt-1">
-                                    {{ form.nome.errors.0 }}
+                                    {{ form.nome_completo.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
@@ -54,6 +55,7 @@
                         </div>
                     </div>
                     
+                    <!-- Informações de Contato -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="{{ form.telefone.id_for_label }}" class="form-label fw-semibold">
@@ -68,6 +70,21 @@
                         </div>
                         
                         <div class="col-md-6 mb-3">
+                            <label for="{{ form.telefone_alternativo.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-phone-alt me-1"></i>Telefone Alternativo
+                            </label>
+                            {{ form.telefone_alternativo }}
+                            {% if form.telefone_alternativo.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.telefone_alternativo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Dados Pessoais -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
                             <label for="{{ form.data_nascimento.id_for_label }}" class="form-label fw-semibold">
                                 <i class="fas fa-calendar me-1"></i>Data de Nascimento
                             </label>
@@ -78,46 +95,101 @@
                                 </div>
                             {% endif %}
                         </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.estado_civil.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-heart me-1"></i>Estado Civil
+                            </label>
+                            {{ form.estado_civil }}
+                            {% if form.estado_civil.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.estado_civil.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                     
+                    <!-- Documentos -->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.tipo_documento.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-id-card me-1"></i>Tipo de Documento
+                            </label>
+                            {{ form.tipo_documento }}
+                            {% if form.tipo_documento.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.tipo_documento.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.numero_documento.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-file-invoice me-1"></i>Número do Documento
+                            </label>
+                            {{ form.numero_documento }}
+                            {% if form.numero_documento.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.numero_documento.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Endereço -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.bi.id_for_label }}" class="form-label fw-semibold">
-                                <i class="fas fa-id-card me-1"></i>Bilhete de Identidade
+                            <label for="{{ form.provincia.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt me-1"></i>Província
                             </label>
-                            {{ form.bi }}
-                            {% if form.bi.errors %}
+                            {{ form.provincia }}
+                            {% if form.provincia.errors %}
                                 <div class="text-danger small mt-1">
-                                    {{ form.bi.errors.0 }}
+                                    {{ form.provincia.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.nif.id_for_label }}" class="form-label fw-semibold">
-                                <i class="fas fa-file-invoice me-1"></i>NIF
+                            <label for="{{ form.municipio.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-city me-1"></i>Município
                             </label>
-                            {{ form.nif }}
-                            {% if form.nif.errors %}
+                            {{ form.municipio }}
+                            {% if form.municipio.errors %}
                                 <div class="text-danger small mt-1">
-                                    {{ form.nif.errors.0 }}
+                                    {{ form.municipio.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="{{ form.endereco.id_for_label }}" class="form-label fw-semibold">
-                            <i class="fas fa-map-marker-alt me-1"></i>Endereço
-                        </label>
-                        {{ form.endereco }}
-                        {% if form.endereco.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.endereco.errors.0 }}
-                            </div>
-                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.bairro.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-home me-1"></i>Bairro
+                            </label>
+                            {{ form.bairro }}
+                            {% if form.bairro.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.bairro.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.endereco_completo.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-map me-1"></i>Endereço Completo
+                            </label>
+                            {{ form.endereco_completo }}
+                            {% if form.endereco_completo.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.endereco_completo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                     
+                    <!-- Informações Profissionais -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="{{ form.profissao.id_for_label }}" class="form-label fw-semibold">
@@ -132,20 +204,6 @@
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.renda_mensal.id_for_label }}" class="form-label fw-semibold">
-                                <i class="fas fa-money-bill-wave me-1"></i>Renda Mensal (AOA)
-                            </label>
-                            {{ form.renda_mensal }}
-                            {% if form.renda_mensal.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.renda_mensal.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
                             <label for="{{ form.empresa.id_for_label }}" class="form-label fw-semibold">
                                 <i class="fas fa-building me-1"></i>Empresa
                             </label>
@@ -156,17 +214,67 @@
                                 </div>
                             {% endif %}
                         </div>
-                        
+                    </div>
+                    
+                    <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="{{ form.tempo_emprego.id_for_label }}" class="form-label fw-semibold">
-                                <i class="fas fa-clock me-1"></i>Tempo de Emprego (meses)
+                            <label for="{{ form.salario_mensal.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-money-bill-wave me-1"></i>Salário Mensal (AOA)
                             </label>
-                            {{ form.tempo_emprego }}
-                            {% if form.tempo_emprego.errors %}
+                            {{ form.salario_mensal }}
+                            {% if form.salario_mensal.errors %}
                                 <div class="text-danger small mt-1">
-                                    {{ form.tempo_emprego.errors.0 }}
+                                    {{ form.salario_mensal.errors.0 }}
                                 </div>
                             {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.tempo_servico_anos.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-clock me-1"></i>Tempo de Serviço (anos)
+                            </label>
+                            {{ form.tempo_servico_anos }}
+                            {% if form.tempo_servico_anos.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.tempo_servico_anos.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Informações Bancárias -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.banco_principal.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-university me-1"></i>Banco Principal
+                            </label>
+                            {{ form.banco_principal }}
+                            {% if form.banco_principal.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.banco_principal.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.numero_conta.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-credit-card me-1"></i>Número da Conta
+                            </label>
+                            {{ form.numero_conta }}
+                            {% if form.numero_conta.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.numero_conta.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.possui_outras_contas }}
+                            <label class="form-check-label fw-semibold" for="{{ form.possui_outras_contas.id_for_label }}">
+                                <i class="fas fa-check-circle me-1"></i>Possui outras contas bancárias
+                            </label>
                         </div>
                     </div>
                     
@@ -192,8 +300,8 @@
                      style="width: 80px; height: 80px;">
                     <i class="fas fa-user display-6"></i>
                 </div>
-                <h5 class="fw-bold">{{ cliente.nome }}</h5>
-                <p class="text-muted mb-3">{{ cliente.email }}</p>
+                <h5 class="fw-bold">{{ cliente.usuario.first_name }} {{ cliente.usuario.last_name }}</h5>
+                <p class="text-muted mb-3">{{ cliente.usuario.email }}</p>
                 
                 <div class="row text-center">
                     <div class="col-6">
@@ -204,7 +312,7 @@
                     </div>
                     <div class="col-6">
                         <h6 class="fw-bold text-success mb-0">
-                            {{ cliente.solicitacoescredito_set.filter_by_status_approved.count }}
+                            {{ cliente.solicitacoescredito_set.filter.status_approved.count|default:0 }}
                         </h6>
                         <small class="text-muted">Aprovadas</small>
                     </div>
