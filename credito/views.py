@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
@@ -67,6 +68,43 @@ def register(request):
         'user_form': user_form,
         'cliente_form': cliente_form
     })
+
+def login_view(request):
+    """View de login alternativa (função)"""
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Bem-vindo de volta, {user.first_name or user.username}!')
+                
+                # Verifica se tem próxima página
+                next_page = request.GET.get('next', 'dashboard')
+                return redirect(next_page)
+            else:
+                messages.error(request, 'Credenciais inválidas.')
+        else:
+            messages.error(request, 'Por favor, corrija os erros abaixo.')
+    else:
+        form = AuthenticationForm()
+    
+    return render(request, 'registration/login.html', {'form': form})
+
+def logout_view(request):
+    """View de logout (função)"""
+    if request.user.is_authenticated:
+        user_name = request.user.first_name or request.user.username
+        logout(request)
+        messages.info(request, f'Até logo, {user_name}! Você foi desconectado com sucesso.')
+    
+    return redirect('home')
 
 @login_required
 def dashboard(request):

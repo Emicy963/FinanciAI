@@ -1,0 +1,509 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro - FinanciAI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-plus fa-2x"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">Criar Conta</h2>
+                    <p class="text-muted">
+                        Junte-se ao FinanciAI e tenha acesso à análise inteligente de crédito
+                    </p>
+                </div>
+
+                <!-- Registration Form -->
+                <form method="post" id="registrationForm">
+                    {% csrf_token %}
+                    
+                    <!-- Progress Indicator -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                         style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                        1
+                                    </div>
+                                    <small class="fw-bold text-primary">Dados de Acesso</small>
+                                </div>
+                                <div class="flex-grow-1 mx-3">
+                                    <hr class="bg-primary" style="height: 2px;">
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                         style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                        2
+                                    </div>
+                                    <small class="text-muted">Dados Pessoais</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: User Account Data -->
+                    <div id="step1" class="form-step">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fas fa-key me-2 text-primary"></i>
+                            Dados de Acesso
+                        </h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.username.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-1"></i>Nome de Usuário
+                                </label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.username.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    Escolha um nome único para identificar sua conta
+                                </small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-1"></i>E-mail
+                                </label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.email.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-id-card me-1"></i>Primeiro Nome
+                                </label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.first_name.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-id-card me-1"></i>Último Nome
+                                </label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.last_name.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.password1.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-1"></i>Senha
+                                </label>
+                                <div class="input-group">
+                                    {{ user_form.password1 }}
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                {% if user_form.password1.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.password1.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.password2.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-1"></i>Confirmar Senha
+                                </label>
+                                <div class="input-group">
+                                    {{ user_form.password2 }}
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                {% if user_form.password2.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in user_form.password2.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary px-4" id="nextStep1">
+                                Próximo <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Client Personal Data -->
+                    <div id="step2" class="form-step d-none">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fas fa-user-circle me-2 text-primary"></i>
+                            Dados Pessoais
+                        </h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.nome.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-signature me-1"></i>Nome Completo
+                                </label>
+                                {{ cliente_form.nome }}
+                                {% if cliente_form.nome.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.nome.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.telefone.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-phone me-1"></i>Telefone
+                                </label>
+                                {{ cliente_form.telefone }}
+                                {% if cliente_form.telefone.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.telefone.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.data_nascimento.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-calendar me-1"></i>Data de Nascimento
+                                </label>
+                                {{ cliente_form.data_nascimento }}
+                                {% if cliente_form.data_nascimento.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.data_nascimento.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.documento_identidade.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-id-card me-1"></i>Documento de Identidade
+                                </label>
+                                {{ cliente_form.documento_identidade }}
+                                {% if cliente_form.documento_identidade.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.documento_identidade.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.renda_mensal.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-money-bill-wave me-1"></i>Renda Mensal (AOA)
+                                </label>
+                                {{ cliente_form.renda_mensal }}
+                                {% if cliente_form.renda_mensal.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.renda_mensal.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ cliente_form.profissao.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="fas fa-briefcase me-1"></i>Profissão
+                                </label>
+                                {{ cliente_form.profissao }}
+                                {% if cliente_form.profissao.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in cliente_form.profissao.errors %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ cliente_form.endereco.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt me-1"></i>Endereço Completo
+                            </label>
+                            {{ cliente_form.endereco }}
+                            {% if cliente_form.endereco.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in cliente_form.endereco.errors %}
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    Concordo com os 
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#termsModal">
+                                        Termos de Uso
+                                    </a> 
+                                    e 
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#privacyModal">
+                                        Política de Privacidade
+                                    </a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary px-4" id="prevStep2">
+                                <i class="fas fa-arrow-left me-2"></i>Anterior
+                            </button>
+                            <button type="submit" class="btn btn-success px-5" id="submitForm">
+                                <i class="fas fa-check me-2"></i>Criar Conta
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Login Link -->
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        Já tem uma conta? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-semibold">
+                            Faça login aqui
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-contract me-2"></i>Termos de Uso
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-muted">
+                    <h6>1. Aceitação dos Termos</h6>
+                    <p>Ao utilizar o FinanciAI, você concorda com estes termos de uso.</p>
+                    
+                    <h6>2. Uso do Serviço</h6>
+                    <p>Nosso serviço destina-se exclusivamente à análise e validação de solicitações de crédito no território angolano.</p>
+                    
+                    <h6>3. Responsabilidades</h6>
+                    <p>Você é responsável por fornecer informações verdadeiras e atualizadas em sua solicitação.</p>
+                    
+                    <h6>4. Privacidade</h6>
+                    <p>Seus dados pessoais são protegidos conforme nossa Política de Privacidade.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-shield-alt me-2"></i>Política de Privacidade
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-muted">
+                    <h6>Coleta de Dados</h6>
+                    <p>Coletamos apenas os dados necessários para análise de crédito e contato com você.</p>
+                    
+                    <h6>Uso dos Dados</h6>
+                    <p>Seus dados são utilizados exclusivamente para análise de crédito e melhorias do sistema.</p>
+                    
+                    <h6>Proteção</h6>
+                    <p>Utilizamos criptografia avançada e seguimos as melhores práticas de segurança.</p>
+                    
+                    <h6>Compartilhamento</h6>
+                    <p>Não compartilhamos seus dados com terceiros sem seu consentimento explícito.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Multi-step form functionality
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const nextStep1Btn = document.getElementById('nextStep1');
+    const prevStep2Btn = document.getElementById('prevStep2');
+    
+    // Progress indicators
+    const progressStep1 = document.querySelector('.bg-primary.rounded-circle');
+    const progressStep2 = document.querySelector('.bg-light.border.rounded-circle');
+    const progressLine = document.querySelector('.flex-grow-1 hr');
+    
+    // Next button Step 1
+    nextStep1Btn.addEventListener('click', function() {
+        // Basic validation for step 1
+        const requiredFields = step1.querySelectorAll('input[required], select[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (isValid) {
+            step1.classList.add('d-none');
+            step2.classList.remove('d-none');
+            
+            // Update progress
+            progressStep2.classList.remove('bg-light', 'border');
+            progressStep2.classList.add('bg-primary', 'text-white');
+            progressStep2.nextElementSibling.classList.remove('text-muted');
+            progressStep2.nextElementSibling.classList.add('fw-bold', 'text-primary');
+        }
+    });
+    
+    // Previous button Step 2
+    prevStep2Btn.addEventListener('click', function() {
+        step2.classList.add('d-none');
+        step1.classList.remove('d-none');
+        
+        // Update progress
+        progressStep2.classList.add('bg-light', 'border');
+        progressStep2.classList.remove('bg-primary', 'text-white');
+        progressStep2.nextElementSibling.classList.add('text-muted');
+        progressStep2.nextElementSibling.classList.remove('fw-bold', 'text-primary');
+    });
+    
+    // Password toggle functionality
+    function togglePasswordVisibility(inputId, buttonId) {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(buttonId);
+        const icon = button.querySelector('i');
+        
+        button.addEventListener('click', function() {
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    }
+    
+    // Initialize password toggles
+    const password1Input = document.querySelector('input[name="password1"]');
+    const password2Input = document.querySelector('input[name="password2"]');
+    
+    if (password1Input && password2Input) {
+        togglePasswordVisibility(password1Input.id, 'togglePassword1');
+        togglePasswordVisibility(password2Input.id, 'togglePassword2');
+    }
+    
+    // Form validation enhancement
+    const form = document.getElementById('registrationForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+    
+    // Phone number formatting
+    const phoneInput = document.querySelector('input[name="telefone"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 9) {
+                value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+            }
+            this.value = value;
+        });
+    }
+    
+    // Form submission with loading state
+    form.addEventListener('submit', function() {
+        const submitBtn = document.getElementById('submitForm');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Criando conta...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

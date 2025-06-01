@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('credito.urls')),
-    path('auth/', include('accounts.urls')),
 ]
 
 # Configuração para servir arquivos de mídia durante desenvolvimento
@@ -15,7 +14,7 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Customização do Admin
-admin.site.site_header = "CreditoSmart Angola - Administração"
-admin.site.site_title = "CreditoSmart Admin"
+admin.site.site_header = "FinanciAI Angola - Administração"
+admin.site.site_title = "FinanciAI Admin"
 admin.site.index_title = "Painel de Administração"
 
