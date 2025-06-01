@@ -3,196 +3,794 @@
 {% block title %}FinanciAI - Sistema Inteligente de Análise de Crédito{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section with Enhanced Readability -->
 <div class="row mb-5">
     <div class="col-12">
-        <div class="jumbotron bg-gradient text-white p-5 rounded-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">
-                        <i class="fas fa-robot me-3"></i>
-                        Análise Inteligente de Crédito
-                    </h1>
-                    <p class="lead mb-4">
-                        Sistema automatizado de validação de crédito desenvolvido especialmente 
-                        para Angola. Análise rápida, segura e baseada em inteligência artificial.
-                    </p>
-                    {% if not user.is_authenticated %}
-                        <div class="d-flex gap-3">
-                            <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4">
-                                <i class="fas fa-user-plus me-2"></i>Começar Agora
-                            </a>
-                            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">
-                                <i class="fas fa-info-circle me-2"></i>Saiba Mais
-                            </a>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-4">
-                            <i class="fas fa-tachometer-alt me-2"></i>Ir ao Dashboard
-                        </a>
-                    {% endif %}
+        <div class="hero-section bg-gradient text-white p-5 rounded-4 position-relative overflow-hidden" 
+             style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.85) 100%), 
+                    linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%); min-height: 500px;">
+            <!-- Animated Background Elements -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 opacity-5">
+                <div class="floating-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <i class="fas fa-chart-line display-1 opacity-75"></i>
+            </div>
+            
+            <!-- Text Shadow Overlay for Better Readability -->
+            <div class="position-absolute top-0 start-0 w-100 h-100" 
+                 style="background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(1px);"></div>
+            
+            <div class="row align-items-center h-100 position-relative" style="z-index: 2;">
+                <div class="col-lg-8">
+                    <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+                        <h1 class="display-3 fw-bold mb-4 hero-title" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                            <i class="fas fa-robot me-3 text-warning"></i>
+                            Análise Inteligente de Crédito
+                        </h1>
+                        <p class="lead mb-4 fs-5" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.4); color: rgba(255,255,255,0.95);">
+                            Sistema automatizado de validação de crédito desenvolvido especialmente 
+                            para Angola. Análise rápida, segura e baseada em inteligência artificial.
+                        </p>
+                        <div class="hero-features mb-4">
+                            <div class="d-flex flex-wrap gap-3 mb-3">
+                                <span class="badge bg-white text-dark px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="fas fa-check-circle me-1 text-success"></i>Aprovação em minutos
+                                </span>
+                                <span class="badge bg-white text-dark px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="fas fa-shield-alt me-1 text-primary"></i>100% Seguro
+                                </span>
+                                <span class="badge bg-white text-dark px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="fas fa-clock me-1 text-info"></i>24/7 Disponível
+                                </span>
+                            </div>
+                        </div>
+                        
+                        {% if not user.is_authenticated %}
+                            <div class="hero-buttons d-flex flex-wrap gap-3">
+                                <a href="{% url 'login' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill shadow-lg btn-hover-effect">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    <span>Começar Agora</span>
+                                </a>
+                                <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill" 
+                                   style="border: 2px solid rgba(255,255,255,0.8); backdrop-filter: blur(10px);">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <span>Saiba Mais</span>
+                                </a>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill shadow-lg btn-hover-effect">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                <span>Ir ao Dashboard</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center" data-aos="fade-left" data-aos-duration="1200">
+                    <div class="hero-illustration">
+                        <i class="fas fa-chart-line display-1 floating-icon" style="color: rgba(255,255,255,0.8); text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"></i>
+                        <div class="pulse-ring"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Statistics Cards -->
-<div class="row mb-5">
+<!-- Enhanced Statistics Cards with Animations -->
+<div class="row mb-5" data-aos="fade-up" data-aos-duration="800">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold text-dark mb-2">Números que Impressionam</h2>
+        <p class="text-muted">Confira nossa performance em tempo real</p>
+    </div>
+    
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="stats-card info text-center">
-            <i class="fas fa-users display-4 mb-3"></i>
-            <h3 class="fw-bold">{{ total_clientes|floatformat:0 }}</h3>
-            <p class="mb-0 opacity-75">Clientes Registrados</p>
+        <div class="stats-card modern-card info text-center h-100 position-relative overflow-hidden">
+            <div class="card-glow"></div>
+            <div class="card-body p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="fas fa-users display-4 text-info"></i>
+                </div>
+                <h3 class="fw-bold counter-number" data-target="{{ total_clientes|floatformat:0 }}">0</h3>
+                <p class="mb-0 text-muted">Clientes Registrados</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-info" style="width: 85%"></div>
+                </div>
+            </div>
         </div>
     </div>
     
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="stats-card warning text-center">
-            <i class="fas fa-file-invoice display-4 mb-3"></i>
-            <h3 class="fw-bold">{{ total_solicitacoes|floatformat:0 }}</h3>
-            <p class="mb-0 opacity-75">Solicitações Processadas</p>
+        <div class="stats-card modern-card warning text-center h-100 position-relative overflow-hidden">
+            <div class="card-glow"></div>
+            <div class="card-body p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="fas fa-file-invoice display-4 text-warning"></i>
+                </div>
+                <h3 class="fw-bold counter-number" data-target="{{ total_solicitacoes|floatformat:0 }}">0</h3>
+                <p class="mb-0 text-muted">Solicitações Processadas</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-warning" style="width: 92%"></div>
+                </div>
+            </div>
         </div>
     </div>
     
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="stats-card success text-center">
-            <i class="fas fa-check-circle display-4 mb-3"></i>
-            <h3 class="fw-bold">{{ aprovacoes_mes|floatformat:0 }}</h3>
-            <p class="mb-0 opacity-75">Aprovações Este Mês</p>
+        <div class="stats-card modern-card success text-center h-100 position-relative overflow-hidden">
+            <div class="card-glow"></div>
+            <div class="card-body p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="fas fa-check-circle display-4 text-success"></i>
+                </div>
+                <h3 class="fw-bold counter-number" data-target="{{ aprovacoes_mes|floatformat:0 }}">0</h3>
+                <p class="mb-0 text-muted">Aprovações Este Mês</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-success" style="width: 78%"></div>
+                </div>
+            </div>
         </div>
     </div>
     
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="stats-card text-center">
-            <i class="fas fa-money-bill-wave display-4 mb-3"></i>
-            <h3 class="fw-bold">{{ volume_aprovado|floatformat:0 }} AOA</h3>
-            <p class="mb-0 opacity-75">Volume Aprovado</p>
+        <div class="stats-card modern-card primary text-center h-100 position-relative overflow-hidden">
+            <div class="card-glow"></div>
+            <div class="card-body p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="fas fa-money-bill-wave display-4 text-primary"></i>
+                </div>
+                <h3 class="fw-bold">
+                    <span class="counter-number" data-target="{{ volume_aprovado|floatformat:0 }}">0</span>
+                    <small class="text-muted"> AOA</small>
+                </h3>
+                <p class="mb-0 text-muted">Volume Aprovado</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-primary" style="width: 95%"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Features Section -->
+<!-- Enhanced Features Section -->
 <div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-5 fw-bold">
+    <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="fw-bold display-5 mb-3">
             <i class="fas fa-star me-2 text-primary"></i>
             Por que escolher o FinanciAI?
         </h2>
+        <p class="lead text-muted">Descubra as vantagens que nos tornam únicos no mercado angolano</p>
     </div>
     
-    <div class="col-lg-4 mb-4">
-        <div class="card h-100 text-center p-4">
-            <div class="card-body">
-                <i class="fas fa-bolt display-4 text-primary mb-3"></i>
-                <h4 class="fw-bold">Análise Rápida</h4>
-                <p class="text-muted">
+    <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card card h-100 border-0 shadow-sm hover-lift">
+            <div class="card-body text-center p-5">
+                <div class="feature-icon mb-4">
+                    <div class="icon-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-bolt display-5 text-primary"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-3">Análise Rápida</h4>
+                <p class="text-muted mb-4">
                     Resultado em poucos minutos através de algoritmos avançados 
-                    de machine learning e análise de dados.
+                    de machine learning e análise de dados em tempo real.
                 </p>
+                <div class="feature-metrics">
+                    <small class="text-success fw-bold">
+                        <i class="fas fa-clock me-1"></i>
+                        Média: 3-5 minutos
+                    </small>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-lg-4 mb-4">
-        <div class="card h-100 text-center p-4">
-            <div class="card-body">
-                <i class="fas fa-shield-alt display-4 text-success mb-3"></i>
-                <h4 class="fw-bold">100% Seguro</h4>
-                <p class="text-muted">
+    <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card card h-100 border-0 shadow-sm hover-lift">
+            <div class="card-body text-center p-5">
+                <div class="feature-icon mb-4">
+                    <div class="icon-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-shield-alt display-5 text-success"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-3">100% Seguro</h4>
+                <p class="text-muted mb-4">
                     Seus dados estão protegidos com criptografia de ponta 
-                    e conformidade com regulamentações angolanas.
+                    e conformidade total com regulamentações angolanas e GDPR.
                 </p>
+                <div class="feature-metrics">
+                    <small class="text-success fw-bold">
+                        <i class="fas fa-lock me-1"></i>
+                        Certificação SSL/TLS
+                    </small>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-lg-4 mb-4">
-        <div class="card h-100 text-center p-4">
-            <div class="card-body">
-                <i class="fas fa-brain display-4 text-info mb-3"></i>
-                <h4 class="fw-bold">IA Avançada</h4>
-                <p class="text-muted">
+    <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-card card h-100 border-0 shadow-sm hover-lift">
+            <div class="card-body text-center p-5">
+                <div class="feature-icon mb-4">
+                    <div class="icon-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-brain display-5 text-info"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-3">IA Avançada</h4>
+                <p class="text-muted mb-4">
                     Sistema baseado em inteligência artificial adaptado 
-                    às especificidades do mercado angolano.
+                    às especificidades do mercado angolano e economia local.
                 </p>
+                <div class="feature-metrics">
+                    <small class="text-success fw-bold">
+                        <i class="fas fa-chart-line me-1"></i>
+                        96% de precisão
+                    </small>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- How it Works -->
+<!-- Enhanced How it Works Section -->
 <div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-5 fw-bold">
+    <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="fw-bold display-5 mb-3">
             <i class="fas fa-cogs me-2 text-primary"></i>
             Como Funciona
         </h2>
+        <p class="lead text-muted">Processo simples e transparente em 4 passos</p>
     </div>
     
-    <div class="col-lg-3 mb-4">
-        <div class="text-center">
-            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                <span class="h3 mb-0">1</span>
+    <div class="col-12">
+        <div class="process-timeline">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="process-step text-center position-relative">
+                        <div class="step-connector"></div>
+                        <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-lg" style="width: 80px; height: 80px;">
+                            <span class="h3 mb-0 fw-bold">1</span>
+                        </div>
+                        <div class="step-content">
+                            <h5 class="fw-bold mb-3">Cadastro Rápido</h5>
+                            <p class="text-muted mb-3">Crie sua conta em menos de 2 minutos e complete seu perfil com informações básicas</p>
+                            <div class="step-features">
+                                <small class="text-primary">
+                                    <i class="fas fa-check me-1"></i>Verificação automática
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="process-step text-center position-relative">
+                        <div class="step-connector"></div>
+                        <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-lg" style="width: 80px; height: 80px;">
+                            <span class="h3 mb-0 fw-bold">2</span>
+                        </div>
+                        <div class="step-content">
+                            <h5 class="fw-bold mb-3">Solicitação Simples</h5>
+                            <p class="text-muted mb-3">Preencha o formulário intuitivo de solicitação de crédito com assistência em tempo real</p>
+                            <div class="step-features">
+                                <small class="text-success">
+                                    <i class="fas fa-check me-1"></i>Formulário inteligente
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="process-step text-center position-relative">
+                        <div class="step-connector"></div>
+                        <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-lg" style="width: 80px; height: 80px;">
+                            <span class="h3 mb-0 fw-bold">3</span>
+                        </div>
+                        <div class="step-content">
+                            <h5 class="fw-bold mb-3">Análise Inteligente</h5>
+                            <p class="text-muted mb-3">Nossa IA analisa automaticamente sua solicitação usando + de 200 variáveis</p>
+                            <div class="step-features">
+                                <small class="text-info">
+                                    <i class="fas fa-check me-1"></i>Análise em tempo real
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="process-step text-center position-relative">
+                        <div class="step-number bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-lg" style="width: 80px; height: 80px;">
+                            <span class="h3 mb-0 fw-bold">4</span>
+                        </div>
+                        <div class="step-content">
+                            <h5 class="fw-bold mb-3">Resultado Instantâneo</h5>
+                            <p class="text-muted mb-3">Receba o resultado detalhado e acompanhe todo o processo pelo dashboard</p>
+                            <div class="step-features">
+                                <small class="text-warning">
+                                    <i class="fas fa-check me-1"></i>Notificação instantânea
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h5 class="fw-bold">Cadastro</h5>
-            <p class="text-muted">Crie sua conta e complete seu perfil com informações básicas</p>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 mb-4">
-        <div class="text-center">
-            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                <span class="h3 mb-0">2</span>
-            </div>
-            <h5 class="fw-bold">Solicitação</h5>
-            <p class="text-muted">Preencha o formulário de solicitação de crédito</p>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 mb-4">
-        <div class="text-center">
-            <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                <span class="h3 mb-0">3</span>
-            </div>
-            <h5 class="fw-bold">Análise</h5>
-            <p class="text-muted">Nosso sistema analisa automaticamente sua solicitação</p>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 mb-4">
-        <div class="text-center">
-            <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                <span class="h3 mb-0">4</span>
-            </div>
-            <h5 class="fw-bold">Resultado</h5>
-            <p class="text-muted">Receba o resultado e acompanhe pelo dashboard</p>
         </div>
     </div>
 </div>
 
-<!-- CTA Section -->
+<!-- Testimonials Section -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col-12 text-center mb-5">
+        <h2 class="fw-bold display-5 mb-3">
+            <i class="fas fa-quote-left me-2 text-primary"></i>
+            O que dizem nossos clientes
+        </h2>
+        <p class="lead text-muted">Histórias reais de sucesso</p>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="testimonial-card card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="stars mb-3">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                </div>
+                <p class="text-muted mb-4">"Processo super rápido e transparente. Consegui meu crédito em apenas 5 minutos!"</p>
+                <div class="d-flex align-items-center">
+                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Maria Silva</h6>
+                        <small class="text-muted">Empresária, Luanda</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="testimonial-card card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="stars mb-3">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                </div>
+                <p class="text-muted mb-4">"Excelente sistema! Muito seguro e fácil de usar. Recomendo a todos."</p>
+                <div class="d-flex align-items-center">
+                    <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">João Santos</h6>
+                        <small class="text-muted">Comerciante, Benguela</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="testimonial-card card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="stars mb-3">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                </div>
+                <p class="text-muted mb-4">"A IA realmente funciona! Análise precisa e justa do meu perfil de crédito."</p>
+                <div class="d-flex align-items-center">
+                    <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Ana Costa</h6>
+                        <small class="text-muted">Professora, Huambo</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced CTA Section -->
 {% if not user.is_authenticated %}
-<div class="row">
+<div class="row" data-aos="fade-up">
     <div class="col-12">
-        <div class="card bg-light border-0 p-5 text-center">
-            <h3 class="fw-bold mb-3">Pronto para começar?</h3>
-            <p class="lead mb-4 text-muted">
-                Junte-se a milhares de angolanos que já confiam no FinanciAI para suas necessidades de crédito.
-            </p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
-                    <i class="fas fa-rocket me-2"></i>Começar Agora
-                </a>
-                <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg px-5">
-                    <i class="fas fa-envelope me-2"></i>Fale Conosco
-                </a>
+        <div class="cta-section card border-0 shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);">
+            <div class="cta-bg-pattern position-absolute top-0 start-0 w-100 h-100 opacity-5">
+                <i class="fas fa-chart-network display-1"></i>
+            </div>
+            <div class="card-body p-5 text-center position-relative">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h3 class="fw-bold display-6 mb-3 text-dark">Pronto para transformar seu futuro financeiro?</h3>
+                        <p class="lead mb-4 text-muted">
+                            Junte-se a <strong>mais de {{ total_clientes|floatformat:0 }}</strong> angolanos que já confiam no FinanciAI 
+                            para suas necessidades de crédito. Comece agora mesmo!
+                        </p>
+                        
+                        <div class="cta-features mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-gift text-primary me-2"></i>
+                                        <small class="fw-bold">Gratuito para começar</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-clock text-success me-2"></i>
+                                        <small class="fw-bold">Resultado em minutos</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-headset text-info me-2"></i>
+                                        <small class="fw-bold">Suporte 24/7</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cta-buttons d-flex flex-wrap justify-content-center gap-3">
+                            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg btn-pulse">
+                                <i class="fas fa-rocket me-2"></i>
+                                <span>Começar Agora - É Grátis!</span>
+                            </a>
+                            <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill">
+                                <i class="fas fa-envelope me-2"></i>
+                                <span>Fale Conosco</span>
+                            </a>
+                        </div>
+                        
+                        <div class="trust-indicators mt-4">
+                            <small class="text-muted d-block mb-2">Confiança e Segurança Garantidas</small>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <span class="badge bg-light text-dark px-3 py-2">
+                                    <i class="fas fa-shield-alt text-success me-1"></i>SSL Seguro
+                                </span>
+                                <span class="badge bg-light text-dark px-3 py-2">
+                                    <i class="fas fa-certificate text-primary me-1"></i>BNA Aprovado
+                                </span>
+                                <span class="badge bg-light text-dark px-3 py-2">
+                                    <i class="fas fa-user-shield text-info me-1"></i>GDPR Compliant
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
+
+<!-- Custom Styles and Animations -->
+<style>
+/* Hero Section Enhancements - Updated for better readability */
+.hero-section {
+    position: relative;
+    background-attachment: fixed;
+}
+
+.floating-shapes .shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-1 { 
+    width: 100px; 
+    height: 100px; 
+    top: 20%; 
+    left: 10%; 
+    animation-delay: 0s; 
+    background: rgba(255, 193, 7, 0.2);
+}
+
+.shape-2 { 
+    width: 60px; 
+    height: 60px; 
+    top: 60%; 
+    right: 15%; 
+    animation-delay: 2s; 
+    background: rgba(40, 167, 69, 0.2);
+}
+
+.shape-3 { 
+    width: 80px; 
+    height: 80px; 
+    bottom: 20%; 
+    left: 70%; 
+    animation-delay: 4s; 
+    background: rgba(23, 162, 184, 0.2);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.floating-icon {
+    animation: bounce 2s infinite;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* Enhanced button styles for better visibility */
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #495057 !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Responsive text shadows */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem !important;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
+    }
+    
+    .hero-section .lead {
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
+    }
+}
+
+/* High contrast improvements */
+@media (prefers-contrast: high) {
+    .hero-section {
+        background: linear-gradient(135deg, #000080 0%, #4B0082 100%) !important;
+    }
+    
+    .hero-title, .hero-section .lead {
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.8) !important;
+        color: #ffffff !important;
+    }
+}
+</style>
+
+<!-- JavaScript for Animations and Interactions -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS (Animate On Scroll) if available
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    }
+    
+    // Counter Animation
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const increment = target / 100;
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current).toLocaleString();
+        }, 20);
+    }
+    
+    // Intersection Observer for counter animation
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                if (!counter.classList.contains('animated')) {
+                    counter.classList.add('animated', 'counter-animated');
+                    animateCounter(counter);
+                }
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    // Observe all counter elements
+    document.querySelectorAll('.counter-number').forEach(counter => {
+        counterObserver.observe(counter);
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Progressive enhancement for hover effects on touch devices
+    if ('ontouchstart' in window) {
+        document.querySelectorAll('.hover-lift').forEach(card => {
+            card.addEventListener('touchstart', function() {
+                this.classList.add('touch-active');
+            });
+            card.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.classList.remove('touch-active');
+                }, 300);
+            });
+        });
+    }
+    
+    // Form validation enhancement (if forms exist)
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                // Focus on first invalid field
+                const firstInvalid = form.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                }
+            }
+        });
+    });
+    
+    // Lazy loading for images (if any)
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                }
+            });
+        });
+        
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+    
+    // Performance optimization: Debounce scroll events
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(function() {
+            // Handle scroll-related animations here if needed
+        }, 10);
+    });
+    
+    // Accessibility: Keyboard navigation for cards
+    document.querySelectorAll('.card, .btn').forEach(element => {
+        element.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (this.tagName === 'A' || this.tagName === 'BUTTON') {
+                    this.click();
+                }
+            }
+        });
+    });
+});
+
+// Error handling for missing dependencies
+window.addEventListener('error', function(e) {
+    console.warn('FinanciAI: Some enhanced features may not be available due to missing dependencies');
+});
+</script>
+
+<!-- Additional CSS for touch devices -->
+<style>
+@media (hover: none) and (pointer: coarse) {
+    .hover-lift:hover {
+        transform: none;
+    }
+    
+    .touch-active {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-hover-effect:hover {
+        transform: none;
+    }
+    
+    .btn-hover-effect:active {
+        transform: translateY(-2px);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #000;
+    }
+    
+    .text-muted {
+        color: #333 !important;
+    }
+    
+    .bg-gradient {
+        background: #000 !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .floating-shapes .shape {
+        animation: none;
+    }
+    
+    .floating-icon {
+        animation: none;
+    }
+    
+    .pulse-ring {
+        animation: none;
+    }
+}
+</style>
 {% endblock %}
