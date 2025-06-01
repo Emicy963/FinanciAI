@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
-from datetime import datetime
+from datetime import date
 
 class Cliente(models.Model):
     TIPOS_DOCUMENTOS_CHOICES = [
@@ -89,8 +89,14 @@ class Cliente(models.Model):
     
     @property
     def idade(self):
-        today = datetime.date.today()
-        return today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
+        if not self.data_nascimento:
+            return None
+        today = date.today()  # Uso correto
+        age = today.year - self.data_nascimento.year
+        # Ajuste para aniversário não ocorrido neste ano
+        if (today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day):
+            age -= 1
+        return age
     
     @property
     def nome_completo(self):
