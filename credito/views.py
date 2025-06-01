@@ -46,20 +46,41 @@ def contact(request):
     return render(request, 'contact.html')
 
 def register(request):
-    """Registro de usuário e cliente"""
+    """Registro de usuário e cliente (melhorado)"""
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+        
     if request.method == 'POST':
         user_form = CustomUserCreationForm(request.POST)
         cliente_form = ClienteForm(request.POST)
         
         if user_form.is_valid() and cliente_form.is_valid():
-            user = user_form.save()
-            cliente = cliente_form.save(commit=False)
-            cliente.usuario = user
-            cliente.save()
-            
-            username = user_form.cleaned_data.get('username')
-            messages.success(request, f'Conta criada para {username}! Você já pode fazer login.')
-            return redirect('login')
+            try:
+                user = user_form.save()
+                
+                cliente = cliente_form.save(commit=False)
+                cliente.usuario = user
+                cliente.save()
+                
+                username = user_form.cleaned_data.get('username')
+                password = user_form.cleaned_data.get('password1')
+                user = authenticate(username=username, password=password)
+                
+                if user:
+                    login(request, user)
+                    messages.success(
+                        request, 
+                        f'Conta criada com sucesso! Bem-vindo ao CreditoSmart, {user.first_name or username}!'
+                    )
+                    return redirect('dashboard')
+                else:
+                    messages.success(request, 'Conta criada com sucesso! Você já pode fazer login.')
+                    return redirect('login')
+                    
+            except Exception as e:
+                messages.error(request, f'Erro ao criar conta: {str(e)}')
+        else:
+            messages.error(request, 'Por favor, corrija os erros abaixo.')
     else:
         user_form = CustomUserCreationForm()
         cliente_form = ClienteForm()
