@@ -208,6 +208,59 @@ class ClienteForm(forms.ModelForm):
 
 
 class SolicitacaoCreditoForm(forms.ModelForm):
+    renda_mensal = forms.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ex: 150000.00',
+            'step': '0.01'
+        }),
+        label='Renda Mensal (AOA)'
+    )
+    
+    profissao = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ex: Engenheiro, Professor'
+        }),
+        label='Profissão'
+    )
+    
+    tempo_emprego = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ex: 24'
+        }),
+        label='Tempo de Emprego (Meses)'
+    )
+    
+    tem_conta_bancaria = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        }),
+        label='Possui Conta Bancária'
+    )
+    
+    tem_historico_credito = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        }),
+        label='Possui Histórico de Crédito'
+    )
+    
+    observacoes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 4,
+            'placeholder': 'Informações adicionais...'
+        }),
+        label='Observações'
+    )
     class Meta:
         model = SolicitacaoCredito
         fields = ['valor_solicitado', 'finalidade', 'prazo_meses']
@@ -233,25 +286,31 @@ class SolicitacaoCreditoForm(forms.ModelForm):
 
     def clean_valor_solicitado(self):
         valor = self.cleaned_data['valor_solicitado']
-        if valor < 10000:
-            raise ValidationError("Valor mínimo para solicitação é de 10.000,00 AOA.")
-        if valor > 50000000:  # 50 milhões AOA
-            raise ValidationError("Valor máximo para solicitação é de 50.000.000,00 AOA.")
+        if valor < 50000:  # Atualizar para coincidir com o template
+            raise ValidationError("Valor mínimo para solicitação é de 50.000,00 AOA.")
+        if valor > 5000000:  # Atualizar para coincidir com o template
+            raise ValidationError("Valor máximo para solicitação é de 5.000.000,00 AOA.")
         
-        # Verificar capacidade de pagamento baseada no salário
-        if self.cliente and hasattr(self.cliente, 'salario_mensal'):
-            # Máximo de 5x o salário mensal
-            valor_maximo = self.cliente.salario_mensal * 5
+        # Verificar capacidade de pagamento baseada na renda informada
+        renda_mensal = self.cleaned_data.get('renda_mensal')
+        if renda_mensal:
+            # Máximo de 5x a renda mensal
+            valor_maximo = renda_mensal * 5
             if valor > valor_maximo:
-                raise ValidationError(f"Valor solicitado excede 5x seu salário mensal. Máximo permitido: {valor_maximo:,.2f} AOA")
+                raise ValidationError(f"Valor solicitado excede 5x sua renda mensal. Máximo permitido: {valor_maximo:,.2f} AOA")
         
         return valor
 
     def clean_prazo_meses(self):
         prazo = self.cleaned_data['prazo_meses']
+        if prazo < 6:
+            raise ValidationError("Prazo mínimo é de 6 meses.")
+        if prazo > 60:
+            raise ValidationError("Prazo máximo é de 60 meses.")
+        
         finalidade = self.cleaned_data.get('finalidade')
         
-        # Regras específicas por finalidade
+        # Regras específicas por finalidade (se ainda quiser manter)
         if finalidade == 'PESSOAL' and prazo > 60:
             raise ValidationError("Prazo máximo para crédito pessoal é de 60 meses.")
         elif finalidade == 'AUTOMOVEL' and prazo > 84:
