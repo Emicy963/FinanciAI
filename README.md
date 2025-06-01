@@ -8,6 +8,8 @@ O **FinanciAI** é um sistema web moderno desenvolvido para automatizar e otimiz
 
 Modernizar e agilizar o processo tradicional de análise de crédito, reduzindo o tempo de resposta de dias para minutos, mantendo a segurança e precisão na avaliação de riscos.
 
+**Obs: Caso queira ter uma visão geral do projeto acesse a documentação para [`Não Desenvolvedores`](ToNoDeveloper)**
+
 ## ✨ Principais Funcionalidades
 
 ### Para Clientes
@@ -141,7 +143,7 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 - Email: andersonpaulo931@gmail.com
 - LinkedIn: [Anderson Cafurica](https://linkedin.com/in/anderson-cafurica)
-- GitHub: [Emicy963](https://github.com/seu-Emicy963)
+- GitHub: [Emicy963](https://github.com/Emicy963)
 
 ## 🙏 Agradecimentos
 
